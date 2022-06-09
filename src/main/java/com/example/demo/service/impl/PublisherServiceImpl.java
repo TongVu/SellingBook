@@ -16,15 +16,14 @@ public class PublisherServiceImpl implements PublisherService {
     @Autowired
     private final PublisherRepository publisherRepository;
 
-
     @Override
     public List<Publisher> getAll() {
         return publisherRepository.findAll();
     }
 
     @Override
-    public void save(Publisher publisher) {
-        publisherRepository.save(publisher);
+    public Publisher save(Publisher publisher) {
+        return publisherRepository.save(publisher);
     }
 
     @Override

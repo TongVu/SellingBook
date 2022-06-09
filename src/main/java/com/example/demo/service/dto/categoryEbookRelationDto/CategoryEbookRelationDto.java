@@ -1,7 +1,5 @@
 package com.example.demo.service.dto.categoryEbookRelationDto;
 
-import com.example.demo.entity.Category;
-import com.example.demo.entity.Ebook;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,9 +9,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CategoryEbookRelationDto {
 
-    private Integer id;
+//    private Ebook ebook
+    private String bookTitle;
 
-    private Ebook ebook;
+    private Integer bookPage;
 
-    private Category category;
+    private Integer rating;
+
+    private String introduction;
+
+    private String categoryName;
+
+    private String publisherName;
+
 }

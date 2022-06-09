@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EbookService {
-
     List<Ebook> getAll();
 
-    void save(Ebook ebook);
+    Ebook save(Ebook ebook);
 
     void deleteById(Integer id);
 

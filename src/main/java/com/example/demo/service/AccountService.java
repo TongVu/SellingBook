@@ -9,7 +9,7 @@ public interface AccountService {
 
     List<Account> getAll();
 
-    void save(Account account);
+    Account save(Account account);
 
     void deleteById(Integer id);
 

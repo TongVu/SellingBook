@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PublisherService {
-
     List<Publisher> getAll();
 
-    void save(Publisher publisher);
+    Publisher save(Publisher publisher);
 
     void deleteById(String id);
 

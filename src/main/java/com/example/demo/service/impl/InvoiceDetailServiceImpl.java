@@ -22,8 +22,8 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
     }
 
     @Override
-    public void save(InvoiceDetail invoiceDetail) {
-        invoiceDetailRepository.save(invoiceDetail);
+    public InvoiceDetail save(InvoiceDetail invoiceDetail) {
+        return invoiceDetailRepository.save(invoiceDetail);
     }
 
     @Override

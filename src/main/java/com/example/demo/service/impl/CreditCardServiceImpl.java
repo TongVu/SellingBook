@@ -22,15 +22,14 @@ public class CreditCardServiceImpl implements CreditCardService {
     }
 
     @Override
-    public void save(CreditCard creditCard) {
-        creditCardRepository.save(creditCard);
+    public CreditCard save(CreditCard creditCard) {
+        return creditCardRepository.save(creditCard);
 
     }
 
     @Override
     public void deleteById(Integer id) {
         creditCardRepository.deleteById(id);
-
     }
 
     @Override

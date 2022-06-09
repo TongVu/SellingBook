@@ -22,8 +22,8 @@ public class CommentEbookRelationServiceImpl implements CommentEbookRelationServ
     }
 
     @Override
-    public void save(CommentEbookRelation category) {
-        commentEbookRelationRepository.save(category);
+    public CommentEbookRelation save(CommentEbookRelation category) {
+        return commentEbookRelationRepository.save(category);
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface AuthorService {
     List<Author> getAll();
 
-    void save(Author author);
+    Author save(Author author);
 
     void deleteById(Integer id);
 

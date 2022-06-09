@@ -12,8 +12,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AuthorDto {
 
-    private Integer id;
-
     private LocalDate dob;
 
     private String address;

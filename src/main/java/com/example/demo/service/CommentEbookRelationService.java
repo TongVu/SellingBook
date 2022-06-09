@@ -8,7 +8,7 @@ public interface CommentEbookRelationService {
 
     List<CommentEbookRelation> getAll();
 
-    void save(CommentEbookRelation category);
+    CommentEbookRelation save(CommentEbookRelation category);
 
     void deleteById(Integer id);
 

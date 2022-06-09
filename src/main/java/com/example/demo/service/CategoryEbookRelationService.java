@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface CategoryEbookRelationService {
     List<CategoryEbookRelation> getAll();
 
-    void save(CategoryEbookRelation categoryEbookRelation);
+    CategoryEbookRelation save(CategoryEbookRelation categoryEbookRelation);
 
     void deleteById(Integer id);
 

@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CreditCardService {
-
     List<CreditCard> getAll();
 
-    void save(CreditCard creditCard);
+    CreditCard save(CreditCard creditCard);
 
     void deleteById(Integer id);
 

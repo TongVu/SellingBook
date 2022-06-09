@@ -1,7 +1,5 @@
 package com.example.demo.service.dto.ebookAuthorRelationDto;
 
-import com.example.demo.entity.Author;
-import com.example.demo.entity.Ebook;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,10 +8,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EbookAuthorRelationDto {
+    //    private Ebook ebook;
+    private String ebookTitle;
 
-    private Integer id;
+    private Integer ebookPage;
 
-    private Ebook ebook;
+    private String ebookIntroduction;
 
-    private Author author;
+    private String ebookPublisherName;
+
+    //    private Author author;
+
+    // author.firstName + author.lastName;
+    private String authorFullName;
+
+    private String authorEmail;
+
+    private String authorGender;
+
 }

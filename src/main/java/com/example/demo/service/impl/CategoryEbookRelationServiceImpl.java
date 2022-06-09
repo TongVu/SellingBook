@@ -22,8 +22,8 @@ public class CategoryEbookRelationServiceImpl implements CategoryEbookRelationSe
     }
 
     @Override
-    public void save(CategoryEbookRelation categoryEbookRelation) {
-        categoryEbookRelationRepository.save(categoryEbookRelation);
+    public CategoryEbookRelation save(CategoryEbookRelation categoryEbookRelation) {
+        return categoryEbookRelationRepository.save(categoryEbookRelation);
     }
 
     @Override

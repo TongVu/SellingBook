@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface CategoryService {
     List<Category> getAll();
 
-    void save(Category category);
+    Category save(Category category);
 
     void deleteById(Integer id);
 

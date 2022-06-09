@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InvoiceService {
-
     List<Invoice> getAll();
 
-    void save(Invoice invoice);
+    Invoice save(Invoice invoice);
 
     void deleteById(Integer id);
 

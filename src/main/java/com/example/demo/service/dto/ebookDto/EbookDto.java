@@ -1,6 +1,5 @@
 package com.example.demo.service.dto.ebookDto;
 
-import com.example.demo.entity.Publisher;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,11 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EbookDto {
-    private Integer id;
-
-    private Integer page;
 
     private String title;
+
+    private Integer page;
 
     private Integer rating;
 
@@ -23,5 +21,9 @@ public class EbookDto {
 
     private String viewLinkStatus;
 
-    private Publisher publisher;
+//    private Publisher publisher;
+    private String publisherName;
+
+    private String publisherEmail;
+
 }

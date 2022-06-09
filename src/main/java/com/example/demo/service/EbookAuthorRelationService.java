@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EbookAuthorRelationService {
-
     List<EbookAuthorRelation> getAll();
 
-    void save(EbookAuthorRelation ebookAuthorRelation);
+    EbookAuthorRelation save(EbookAuthorRelation ebookAuthorRelation);
 
     void deleteById(Integer id);
 

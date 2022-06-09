@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface InvoiceDetailService {
     List<InvoiceDetail> getAll();
 
-    void save(InvoiceDetail invoiceDetail);
+    InvoiceDetail save(InvoiceDetail invoiceDetail);
 
     void deleteById(Integer id);
 

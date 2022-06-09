@@ -22,8 +22,8 @@ public class EbookAuthorRelationServiceImpl implements EbookAuthorRelationServic
     }
 
     @Override
-    public void save(EbookAuthorRelation ebookAuthorRelation) {
-        ebookAuthorRelationRepository.save(ebookAuthorRelation);
+    public EbookAuthorRelation save(EbookAuthorRelation ebookAuthorRelation) {
+        return ebookAuthorRelationRepository.save(ebookAuthorRelation);
     }
 
     @Override

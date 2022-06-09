@@ -22,8 +22,8 @@ public class EbookServiceImpl implements EbookService {
     }
 
     @Override
-    public void save(Ebook ebook) {
-        ebookRepository.save(ebook);
+    public Ebook save(Ebook ebook) {
+        return ebookRepository.save(ebook);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.example.demo.service.dto.invoiceDto;
 
-import com.example.demo.entity.Account;
-import com.example.demo.entity.Invoice;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,8 +20,10 @@ public class InvoiceDto {
 
     private double totalPayment;
 
-    private Invoice invoice;
+//    private CreditCard creditCard;
+    private Integer creditCardCardNumber;
 
-    private Account account;
+//    private Account account;
+    private String accountFullName;
 
 }
