@@ -2,9 +2,7 @@ package com.example.demo.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -16,6 +14,11 @@ import javax.validation.constraints.NotNull;
 @Table
 public class Publisher {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @NotNull
+    @Column(unique = true)
     private String name;
 
     @NotNull

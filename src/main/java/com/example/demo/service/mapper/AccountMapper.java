@@ -9,10 +9,11 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 
-//@Mapper
- @Mapper(componentModel = MappingConstants.ComponentModel.CDI)
+// @Mapper(componentModel = MappingConstants.ComponentModel.CDI)
+
+@Mapper(componentModel = "spring")
 public interface AccountMapper {
-//    AccountMapper INSTANCE = Mappers.getMapper(AccountMapper.class);
+    AccountMapper INSTANCE = Mappers.getMapper(AccountMapper.class);
 
     AccountDto toDto(Account account);
     List<AccountDto> toDtos(List<Account> accountList);

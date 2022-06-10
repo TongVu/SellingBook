@@ -10,7 +10,7 @@ public interface PublisherService {
 
     Publisher save(Publisher publisher);
 
-    void deleteById(String id);
+    void deleteById(Integer id);
 
-    Optional<Publisher> findPublisherById(String id);
+    Optional<Publisher> findPublisherById(Integer id);
 }

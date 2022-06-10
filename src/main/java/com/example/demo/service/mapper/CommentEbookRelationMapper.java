@@ -8,7 +8,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CommentEbookRelationMapper {
     CommentEbookRelationMapper INSTANCE = Mappers.getMapper(CommentEbookRelationMapper.class);
     @Mapping(source = "comment.commentContent", target = "commentContent")

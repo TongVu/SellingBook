@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,12 +28,12 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(Integer id) {
         publisherRepository.deleteById(id);
     }
 
     @Override
-    public Optional<Publisher> findPublisherById(String id) {
+    public Optional<Publisher> findPublisherById(Integer id) {
         return publisherRepository.findById(id);
     }
 }

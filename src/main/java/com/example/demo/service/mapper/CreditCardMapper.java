@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CreditCardMapper {
     CreditCardMapper INSTANCE = Mappers.getMapper(CreditCardMapper.class);
 

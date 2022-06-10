@@ -13,7 +13,7 @@ public class EbookDto {
 
     private Integer page;
 
-    private Integer rating;
+    private Double rating;
 
     private String introduction;
 
