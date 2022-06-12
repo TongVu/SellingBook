@@ -4,6 +4,7 @@ import com.example.demo.controller.request.CategoryRequest;
 import com.example.demo.entity.Category;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.service.CategoryService;
+import com.example.demo.service.EbookService;
 import com.example.demo.service.dto.categoryDto.CategoryDto;
 import com.example.demo.service.mapper.CategoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,17 +48,20 @@ public class CategoryResource {
                 )
         );
 
-        return ResponseEntity.created(URI.create(PATH + "/" + createdCategory.getId())).body(categoryMapper.toDto(createdCategory));
+        return ResponseEntity
+                .created(URI.create(PATH + "/" + createdCategory.getId()))
+                .body(categoryMapper.toDto(createdCategory));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDto> update(@PathVariable("id") Integer id,
-                                              @RequestBody Category category) throws ResourceNotFoundException{
+                                              @RequestBody CategoryRequest categoryRequest) throws ResourceNotFoundException{
         Category updatedCategory = categoryService.findCategoryById(id)
                 .orElseThrow(() -> new ResourceAccessException("Not found " + id));
 
-        updatedCategory.setName(category.getName());
-        updatedCategory.setNumberOfBooks(category.getNumberOfBooks());
+        updatedCategory.setName(categoryRequest.getName());
+        updatedCategory.setNumberOfBooks(categoryRequest.getNumberOfBooks());
+        categoryService.save(updatedCategory);
 
         return ResponseEntity.ok(categoryMapper.toDto(updatedCategory));
     }

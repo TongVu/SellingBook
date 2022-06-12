@@ -48,7 +48,9 @@ public class PublisherResource {
                 )
         );
 
-        return ResponseEntity.created(URI.create(PATH + "/" + createdPublisher.getId())).body(publisherMapper.toDto(createdPublisher));
+        return ResponseEntity
+                .created(URI.create(PATH + "/" + createdPublisher.getId()))
+                .body(publisherMapper.toDto(createdPublisher));
     }
 
     @PutMapping("/{id}")

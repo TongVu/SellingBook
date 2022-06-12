@@ -37,6 +37,26 @@ public class AuthorResource {
         return ResponseEntity.ok(authorMapper.toDto(author));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<AuthorDto> updateAuthor(@PathVariable("id") Integer id,
+                                                  @RequestBody AuthorRequest author) throws ResourceNotFoundException {
+        Author updatedAuthor = authorService.findAuthorById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+
+        updatedAuthor.setAddress(author.getAddress());
+        updatedAuthor.setDob(author.getDob());
+        updatedAuthor.setGender(author.getGender());
+        updatedAuthor.setEmail(author.getEmail());
+        updatedAuthor.setNationality(author.getNationality());
+        updatedAuthor.setPhone(author.getPhone());
+        updatedAuthor.setFirstName(author.getFirstName());
+        updatedAuthor.setLastName(author.getLastName());
+        authorService.save(updatedAuthor);
+
+
+        return ResponseEntity.ok(authorMapper.toDto(authorService.save(updatedAuthor)));
+    }
+
     @PostMapping
     public ResponseEntity<AuthorDto> createAuthor(@RequestBody AuthorRequest author) {
         Author createdAuthor = authorService.save(
@@ -52,26 +72,9 @@ public class AuthorResource {
                 )
         );
 
-        return ResponseEntity.created(URI.create(PATH + "/" + createdAuthor.getId())).body(authorMapper.toDto(createdAuthor));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<AuthorDto> updateAuthor(@PathVariable("id") Integer id,
-                                                  @RequestBody AuthorRequest author) throws ResourceNotFoundException {
-        Author updatedAuthor = authorService.findAuthorById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
-
-        updatedAuthor.setAddress(author.getAddress());
-        updatedAuthor.setDob(author.getDob());
-        updatedAuthor.setGender(author.getGender());
-        updatedAuthor.setEmail(author.getEmail());
-        updatedAuthor.setNationality(author.getNationality());
-        updatedAuthor.setPhone(author.getPhone());
-        updatedAuthor.setFirstName(author.getFirstName());
-        updatedAuthor.setLastName(author.getLastName());
-
-
-        return ResponseEntity.ok(authorMapper.toDto(authorService.save(updatedAuthor)));
+        return ResponseEntity
+                .created(URI.create(PATH + "/" + createdAuthor.getId()))
+                .body(authorMapper.toDto(createdAuthor));
     }
 
     @DeleteMapping("/{id}")

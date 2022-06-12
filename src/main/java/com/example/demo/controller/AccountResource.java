@@ -54,7 +54,9 @@ public class AccountResource {
                 )
         );
 
-        return ResponseEntity.created(URI.create(PATH + "/" + createdAccount.getId())).body(accountMapper.toDto(createdAccount));
+        return ResponseEntity
+                .created(URI.create(PATH + "/" + createdAccount.getId()))
+                .body(accountMapper.toDto(createdAccount));
     }
 
     @PutMapping("/{id}")
@@ -68,6 +70,7 @@ public class AccountResource {
         updatedAccount.setGender(account.getGender());
         updatedAccount.setFirstName(account.getFirstName());
         updatedAccount.setLastName(account.getLastName());
+        accountService.save(updatedAccount);
 
         return ResponseEntity.ok(accountMapper.toDto(updatedAccount));
     }
