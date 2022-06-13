@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EbookRequest {
-    private Integer id;
 
     private Integer page;
 

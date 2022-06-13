@@ -25,5 +25,4 @@ public class EbookDto {
     private String publisherName;
 
     private String publisherEmail;
-
 }

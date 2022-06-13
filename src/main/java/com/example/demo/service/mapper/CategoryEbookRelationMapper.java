@@ -15,8 +15,9 @@ public interface CategoryEbookRelationMapper {
     @Mapping(source = "ebook.title", target ="bookTitle")
     @Mapping(source = "ebook.page", target ="bookPage")
     @Mapping(source = "ebook.rating", target ="rating")
-    @Mapping(source = "ebook.publisher.name", target ="publisherName")
+    @Mapping(source = "ebook.introduction", target ="introduction")
     @Mapping(source = "category.name", target ="categoryName")
+    @Mapping(source = "ebook.publisher.name", target ="publisherName")
 
     CategoryEbookRelationDto toDto(CategoryEbookRelation categoryEbookRelation);
     List<CategoryEbookRelationDto> toDtos(List<CategoryEbookRelation> categoryEbookRelationList);

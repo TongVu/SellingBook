@@ -25,4 +25,5 @@ public class CategoryEbookRelation {
     @ManyToOne
     @JoinColumn(name = "fk_category_id")
     private Category category;
+
 }

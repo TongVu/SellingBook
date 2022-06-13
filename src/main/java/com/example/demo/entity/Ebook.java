@@ -27,6 +27,7 @@ public class Ebook {
     private Double rating;
 
     @NotNull
+    @Column(length = 10000)
     private String introduction;
 
     @NotNull
@@ -38,5 +39,4 @@ public class Ebook {
     @ManyToOne
     @JoinColumn(name = "fk_publisher_id")
     private Publisher publisher;
-
 }

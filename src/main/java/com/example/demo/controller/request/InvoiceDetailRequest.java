@@ -1,7 +1,5 @@
 package com.example.demo.controller.request;
 
-import com.example.demo.entity.Ebook;
-import com.example.demo.entity.Invoice;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

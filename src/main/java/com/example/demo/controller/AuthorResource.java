@@ -51,8 +51,6 @@ public class AuthorResource {
         updatedAuthor.setPhone(author.getPhone());
         updatedAuthor.setFirstName(author.getFirstName());
         updatedAuthor.setLastName(author.getLastName());
-        authorService.save(updatedAuthor);
-
 
         return ResponseEntity.ok(authorMapper.toDto(authorService.save(updatedAuthor)));
     }

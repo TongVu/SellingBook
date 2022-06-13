@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.request.InvoiceDetailRequest;
-import com.example.demo.entity.*;
+import com.example.demo.entity.Ebook;
+import com.example.demo.entity.Invoice;
+import com.example.demo.entity.InvoiceDetail;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.service.EbookService;
 import com.example.demo.service.InvoiceDetailService;

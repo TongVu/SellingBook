@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.request.CategoryEbookRelationRequest;
-import com.example.demo.controller.request.CategoryRequest;
-import com.example.demo.entity.Author;
 import com.example.demo.entity.Category;
 import com.example.demo.entity.CategoryEbookRelation;
 import com.example.demo.entity.Ebook;
@@ -60,7 +58,6 @@ public class CategoryEbookRelationResource {
 
         updatedCategoryEbookRelation.setCategory(requestedCategory);
         updatedCategoryEbookRelation.setEbook(requestedEbook);
-        categoryEbookRelationService.save(updatedCategoryEbookRelation);
 
         return ResponseEntity.ok(categoryEbookRelationMapper.toDto(categoryEbookRelationService.save(updatedCategoryEbookRelation)));
     }

@@ -19,8 +19,7 @@ public class Category {
 
     @NotNull
     @Column(unique = true)
-    private CategoryName name;
+    private String name;
 
-    @NotNull
     private Integer numberOfBooks;
 }

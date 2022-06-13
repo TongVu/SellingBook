@@ -11,6 +11,7 @@ import com.example.demo.service.mapper.EbookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.net.URI;
 import java.util.List;
@@ -42,7 +43,7 @@ public class EbookResource {
         return ResponseEntity.ok(ebookMapper.toDto(foundEbook));
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<EbookDto> update(@PathVariable("id") Integer id,
                                            @RequestBody EbookRequest ebookRequest) throws ResourceNotFoundException{
         Publisher requestedPublisher = publisherService.findPublisherById(ebookRequest.getPublisherId())
@@ -57,13 +58,15 @@ public class EbookResource {
         updatedEbook.setPurchased(ebookRequest.getPurchased());
         updatedEbook.setViewLinkStatus(ebookRequest.getViewLinkStatus());
         updatedEbook.setPublisher(requestedPublisher);
-        ebookService.save(updatedEbook);
 
-        return ResponseEntity.ok(ebookMapper.toDto(updatedEbook));
+        return ResponseEntity.ok(ebookMapper.toDto(ebookService.save(updatedEbook)));
     }
 
     @PostMapping
-    public ResponseEntity<EbookDto> create(@RequestBody Ebook ebook){
+    public ResponseEntity<EbookDto> create(@RequestBody EbookRequest ebook) throws ResourceNotFoundException{
+        Publisher requestedPublisher = publisherService.findPublisherById(ebook.getPublisherId())
+                .orElseThrow(() -> new ResourceAccessException("Not found publisher " + ebook.getPublisherId()));
+
         Ebook createdEbook = ebookService.save(
                 new Ebook( null,
                         ebook.getPage(),
@@ -72,7 +75,7 @@ public class EbookResource {
                         ebook.getIntroduction(),
                         ebook.getPurchased(),
                         ebook.getViewLinkStatus(),
-                        ebook.getPublisher()
+                        requestedPublisher
                         )
         );
 

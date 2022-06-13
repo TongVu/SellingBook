@@ -44,7 +44,7 @@ public class EbookAuthorRelationResource {
         return ResponseEntity.ok(ebookAuthorRelationMapper.toDto(ebookAuthorRelation));
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<EbookAuthorRelationDto> update(@PathVariable("id") Integer id,
                                                          @RequestBody EbookAuthorRelationRequest ebookAuthorRelationRequest) throws ResourceNotFoundException{
         Ebook requestedEbook = ebookService.findEbookById(ebookAuthorRelationRequest.getEbookId())

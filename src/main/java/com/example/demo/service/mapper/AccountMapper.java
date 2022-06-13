@@ -3,7 +3,6 @@ package com.example.demo.service.mapper;
 import com.example.demo.entity.Account;
 import com.example.demo.service.dto.accountDto.AccountDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;

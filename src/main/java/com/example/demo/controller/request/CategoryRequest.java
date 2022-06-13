@@ -1,6 +1,5 @@
 package com.example.demo.controller.request;
 
-import com.example.demo.entity.CategoryName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategoryRequest {
 
-    private CategoryName name;
+    private String name;
 
     private Integer numberOfBooks;
 }
