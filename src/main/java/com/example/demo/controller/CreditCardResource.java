@@ -16,7 +16,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping(CreditCardResource.PATH)
 public class CreditCardResource {
     public static final String PATH = "/api/creditcards";
 
@@ -54,20 +54,22 @@ public class CreditCardResource {
         updatedCreditCard.setCardNumber(creditCardRequest.getCardNumber());
         updatedCreditCard.setExpiredDate(creditCardRequest.getExpiredDate());
         updatedCreditCard.setBalance(creditCardRequest.getBalance());
-        creditCardService.save(updatedCreditCard);
 
-        return ResponseEntity.ok(creditCardMapper.toDto(updatedCreditCard));
+        return ResponseEntity.ok(creditCardMapper.toDto(creditCardService.save(updatedCreditCard)));
     }
 
     @PostMapping
-    public ResponseEntity<CreditCardDto> create(@RequestBody CreditCard creditCard){
+    public ResponseEntity<CreditCardDto> create(@RequestBody CreditCardRequest creditCardRequest) throws ResourceNotFoundException{
+        Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
+                .orElseThrow(() -> new ResourceNotFoundException("Not found " + creditCardRequest.getAccountId()));
+
         CreditCard createdCreditCard = creditCardService.save(
                 new CreditCard(
                         null,
-                        creditCard.getCardNumber(),
-                        creditCard.getExpiredDate(),
-                        creditCard.getBalance(),
-                        creditCard.getAccount()
+                        creditCardRequest.getCardNumber(),
+                        creditCardRequest.getExpiredDate(),
+                        creditCardRequest.getBalance(),
+                        requestedAccount
                 )
         );
 
@@ -76,7 +78,7 @@ public class CreditCardResource {
                 .body(creditCardMapper.toDto(createdCreditCard));
     }
 
-    @DeleteMapping("id")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws ResourceNotFoundException{
         CreditCard deletedCreditCard = creditCardService.findCreditCardById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Credit card not found " + id));

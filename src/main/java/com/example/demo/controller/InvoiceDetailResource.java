@@ -14,6 +14,7 @@ import org.hibernate.ResourceClosedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.net.URI;
 import java.util.List;
@@ -70,20 +71,26 @@ public class InvoiceDetailResource {
     }
 
     @PostMapping
-    public ResponseEntity<InvoiceDetailDto> create(@RequestBody InvoiceDetail invoiceDetail){
-        InvoiceDetail createdInvoiceDtail = invoiceDetailService.save(
+    public ResponseEntity<InvoiceDetailDto> create(@RequestBody InvoiceDetailRequest invoiceDetail) throws ResourceNotFoundException{
+        Invoice requestedInvoice = invoiceService.findInvoiceById(invoiceDetail.getInvoiceId())
+                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found " + invoiceDetail.getInvoiceId()));
+
+        Ebook requestedEbook = ebookService.findEbookById(invoiceDetail.getEbookId())
+                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found" + invoiceDetail.getEbookId()));
+
+        InvoiceDetail createdInvoiceDetail = invoiceDetailService.save(
                 new InvoiceDetail(
                         null,
                         invoiceDetail.getDateAdded(),
                         invoiceDetail.getEbookPrice(),
-                        invoiceDetail.getInvoice(),
-                        invoiceDetail.getEbook()
+                        requestedInvoice,
+                        requestedEbook
                 )
         );
 
         return ResponseEntity
-                .created(URI.create(PATH + "/" + createdInvoiceDtail.getId()))
-                .body(invoiceDetailMapper.toDto(createdInvoiceDtail));
+                .created(URI.create(PATH + "/" + createdInvoiceDetail.getId()))
+                .body(invoiceDetailMapper.toDto(createdInvoiceDetail));
     }
 
     @DeleteMapping("/{id}")

@@ -70,9 +70,9 @@ public class AccountResource {
         updatedAccount.setGender(account.getGender());
         updatedAccount.setFirstName(account.getFirstName());
         updatedAccount.setLastName(account.getLastName());
-        accountService.save(updatedAccount);
 
-        return ResponseEntity.ok(accountMapper.toDto(updatedAccount));
+        return ResponseEntity.ok(accountMapper.toDto(
+                accountService.save(updatedAccount)));
     }
 
     @DeleteMapping("/{id}")

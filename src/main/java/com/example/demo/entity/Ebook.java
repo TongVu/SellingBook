@@ -27,7 +27,7 @@ public class Ebook {
     private Double rating;
 
     @NotNull
-    @Column(length = 10000)
+    @Column(length = 1000)
     private String introduction;
 
     @NotNull

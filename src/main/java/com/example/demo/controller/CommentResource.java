@@ -62,15 +62,18 @@ public class CommentResource {
     }
 
     @PostMapping
-    public ResponseEntity<CommentDto> create(@RequestBody Comment comment){
+    public ResponseEntity<CommentDto> create(@RequestBody CommentRequest commentRequest) throws ResourceNotFoundException{
+        Account requestedAccount = accountService.findAccountById(commentRequest.getAccountId())
+                .orElseThrow(() -> new ResourceAccessException("Account not found " + commentRequest.getAccountId()));
+
         Comment createdComment = commentService.save(
                 new Comment(
                         null,
-                        comment.getCommentContent(),
-                        comment.getBookRating(),
-                        comment.getCommentUpvote(),
-                        comment.getDate(),
-                        comment.getAccount()
+                        commentRequest.getCommentContent(),
+                        commentRequest.getBookRating(),
+                        commentRequest.getCommentUpvote(),
+                        commentRequest.getDate(),
+                        requestedAccount
                 )
         );
 

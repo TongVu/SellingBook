@@ -54,11 +54,17 @@ public class CommentEbookRelationResource {
         CommentEbookRelation commentEbookRelation = commentEbookRelationService.findCommentEbookRelationById(id)
                 .orElseThrow(() -> new ResourceAccessException("Not found " + id));
 
-        commentEbookRelation.getComment().setId(commentEbookRelationRequest.getCommentId());
-        commentEbookRelation.getEbook().setId(commentEbookRelationRequest.getEbookId());
-        commentEbookRelationService.save(commentEbookRelation);
+        Comment requestedComment = commentService.findCommentById(commentEbookRelationRequest.getCommentId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Comment not found " + commentEbookRelationRequest.getCommentId()));
 
-        return ResponseEntity.ok(commentEbookRelationMapper.toDto(commentEbookRelationService.save(commentEbookRelation)));
+        Ebook requetedEbook = ebookService.findEbookById(commentEbookRelationRequest.getEbookId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Ebook not found" + commentEbookRelationRequest.getEbookId()));
+
+        commentEbookRelation.setComment(requestedComment);
+        commentEbookRelation.setEbook(requetedEbook);
+
+        return ResponseEntity
+                .ok(commentEbookRelationMapper.toDto(commentEbookRelationService.save(commentEbookRelation)));
     }
 
     @PostMapping
@@ -79,7 +85,7 @@ public class CommentEbookRelationResource {
                 .body(commentEbookRelationMapper.toDto(newCommentEbookRelation));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id)throws ResourceNotFoundException{
         CommentEbookRelation deletedCommentEbookRelation = commentEbookRelationService.findCommentEbookRelationById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));

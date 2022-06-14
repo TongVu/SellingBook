@@ -19,6 +19,7 @@ public class CreditCard {
     private Integer id;
 
     @NotNull
+    @Column(unique = true)
     private Integer cardNumber;
 
     @NotNull

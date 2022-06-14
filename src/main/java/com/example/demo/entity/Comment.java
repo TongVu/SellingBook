@@ -20,6 +20,7 @@ public class Comment {
     private Integer id;
 
     @NotNull
+    @Column(length = 2000)
     private String commentContent;
 
     private Integer bookRating;

@@ -65,11 +65,17 @@ public class EbookAuthorRelationResource {
 
     // check this
     @PostMapping
-    public ResponseEntity<EbookAuthorRelationDto> create(@RequestBody EbookAuthorRelation ebookAuthorRelationRequest){
+    public ResponseEntity<EbookAuthorRelationDto> create(@RequestBody EbookAuthorRelationRequest ebookAuthorRelationRequest)throws ResourceNotFoundException{
+        Ebook requestedEbook = ebookService.findEbookById(ebookAuthorRelationRequest.getEbookId())
+                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found " +ebookAuthorRelationRequest.getEbookId()));
+
+        Author requestedAuthor = authorService.findAuthorById(ebookAuthorRelationRequest.getAuthorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found " + ebookAuthorRelationRequest.getAuthorId()));
+
         EbookAuthorRelation ebookAuthorRelation = new EbookAuthorRelation(
                 null,
-                ebookAuthorRelationRequest.getEbook(),
-                ebookAuthorRelationRequest.getAuthor()
+                requestedEbook,
+                requestedAuthor
         );
 
         return ResponseEntity

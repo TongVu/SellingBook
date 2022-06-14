@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvoiceRequest {
-    private Integer invoiceId;
 
     private LocalDate invoiceDate;
 

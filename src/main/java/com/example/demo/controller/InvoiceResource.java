@@ -36,7 +36,7 @@ public class InvoiceResource {
     AccountService accountService;
 
     @GetMapping
-    public ResponseEntity<List<InvoiceDto>> getAll(){
+    public ResponseEntity<List<InvoiceDto>> getAll() {
         return ResponseEntity.ok(invoiceMapper.toDtos(invoiceService.getAll()));
     }
 
@@ -64,14 +64,20 @@ public class InvoiceResource {
         updatedInvoice.setQuantity(invoiceRequest.getQuantity());
         updatedInvoice.setPay(invoiceRequest.isPay());
         updatedInvoice.setTotalPayment(invoiceRequest.getTotalPayment());
-        updatedInvoice.getCreditCard().setId(invoiceRequest.getCreditCardId());
-        updatedInvoice.getAccount().setId(invoiceRequest.getAccountId());
+        updatedInvoice.setCreditCard(requestedCreditCard);
+        updatedInvoice.setAccount(requestedAccount);
 
         return ResponseEntity.ok(invoiceMapper.toDto(invoiceService.save(updatedInvoice)));
     }
 
     @PostMapping
-    public ResponseEntity<InvoiceDto> create(@RequestBody Invoice invoice){
+    public ResponseEntity<InvoiceDto> create(@RequestBody InvoiceRequest invoice) throws ResourceNotFoundException {
+        CreditCard requestedCreditCard = creditCardService.findCreditCardById(invoice.getCreditCardId())
+                .orElseThrow(() -> new ResourceNotFoundException("Credit card not found " + invoice.getCreditCardId()));
+
+        Account requestedAccount = accountService.findAccountById(invoice.getAccountId())
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found " + invoice.getAccountId()));
+
         Invoice createdInvoice = invoiceService.save(
                 new Invoice(
                         null,
@@ -79,8 +85,8 @@ public class InvoiceResource {
                         invoice.getQuantity(),
                         invoice.isPay(),
                         invoice.getTotalPayment(),
-                        invoice.getCreditCard(),
-                        invoice.getAccount()
+                        requestedCreditCard,
+                        requestedAccount
                 )
         );
 
@@ -90,7 +96,7 @@ public class InvoiceResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws ResourceNotFoundException{
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws ResourceNotFoundException {
         Invoice deletedInvoice = invoiceService.findInvoiceById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found " + id));
         invoiceService.deleteById(id);

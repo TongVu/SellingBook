@@ -28,12 +28,15 @@ public class Account {
     private LocalDate dob;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @NotNull
+    @Column(unique = true)
     private String email;
 
     @NotNull
+    @Column(unique = true)
     private String phone;
 
     private String address;

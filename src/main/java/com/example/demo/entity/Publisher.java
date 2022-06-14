@@ -22,11 +22,13 @@ public class Publisher {
     private String name;
 
     @NotNull
+    @Column(unique = true)
     private String phone;
 
     @NotNull
     private String address;
 
     @NotNull
+    @Column(unique = true)
     private String email;
 }

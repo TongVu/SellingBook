@@ -24,6 +24,7 @@ public class Author {
     private String address;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @NotNull
@@ -33,9 +34,11 @@ public class Author {
     private String lastName;
 
     @NotNull
+    @Column(unique = true)
     private String email;
 
     @NotNull
+    @Column(unique = true)
     private String phone;
 
     @NotNull
