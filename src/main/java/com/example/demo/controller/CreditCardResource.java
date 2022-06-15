@@ -30,7 +30,7 @@ public class CreditCardResource {
     AccountService accountService;
 
     @GetMapping
-    public ResponseEntity<List<CreditCardDto>> getAll(){
+    public ResponseEntity<List<CreditCardDto>> getAll() {
         return ResponseEntity.ok(creditCardMapper.toDtos(creditCardService.getAll()));
     }
 
@@ -44,7 +44,7 @@ public class CreditCardResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<CreditCardDto> update(@PathVariable("id") Integer id,
-                                                @RequestBody CreditCardRequest creditCardRequest)throws ResourceNotFoundException{
+                                                @RequestBody CreditCardRequest creditCardRequest) throws ResourceNotFoundException {
         CreditCard updatedCreditCard = creditCardService.findCreditCardById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Credit card not found " + id));
         Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
@@ -59,27 +59,25 @@ public class CreditCardResource {
     }
 
     @PostMapping
-    public ResponseEntity<CreditCardDto> create(@RequestBody CreditCardRequest creditCardRequest) throws ResourceNotFoundException{
+    public ResponseEntity<CreditCardDto> create(@RequestBody CreditCardRequest creditCardRequest) throws ResourceNotFoundException {
         Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
                 .orElseThrow(() -> new ResourceNotFoundException("Not found " + creditCardRequest.getAccountId()));
 
-        CreditCard createdCreditCard = creditCardService.save(
-                new CreditCard(
-                        null,
-                        creditCardRequest.getCardNumber(),
-                        creditCardRequest.getExpiredDate(),
-                        creditCardRequest.getBalance(),
-                        requestedAccount
-                )
-        );
+        CreditCard createdCreditCard = new CreditCard();
+        createdCreditCard.setAccount(requestedAccount);
+        createdCreditCard.setCardNumber(creditCardRequest.getCardNumber());
+        createdCreditCard.setExpiredDate(creditCardRequest.getExpiredDate());
+        createdCreditCard.setBalance(creditCardRequest.getBalance());
+
+        creditCardService.save(createdCreditCard);
 
         return ResponseEntity
-                .created(URI.create(PATH  + "/" + createdCreditCard.getId()))
+                .created(URI.create(PATH + "/" + createdCreditCard.getId()))
                 .body(creditCardMapper.toDto(createdCreditCard));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws ResourceNotFoundException{
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws ResourceNotFoundException {
         CreditCard deletedCreditCard = creditCardService.findCreditCardById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Credit card not found " + id));
         creditCardService.deleteById(id);

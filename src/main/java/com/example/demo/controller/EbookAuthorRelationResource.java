@@ -11,6 +11,7 @@ import com.example.demo.service.EbookService;
 import com.example.demo.service.dto.ebookAuthorRelationDto.EbookAuthorRelationDto;
 import com.example.demo.service.mapper.EbookAuthorRelationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,13 @@ public class EbookAuthorRelationResource {
         return ResponseEntity.ok(ebookAuthorRelationMapper.toDto(ebookAuthorRelation));
     }
 
+    @GetMapping("/find")
+    public ResponseEntity<List<EbookAuthorRelationDto>> getAuthorsByLastNameContaining(@RequestParam("authorname") String authorName){
+        List<EbookAuthorRelation> requestedAuthors = ebookAuthorRelationService.findByAuthorLastNameContainingIgnoreCase(authorName);
+
+        return ResponseEntity.ok(ebookAuthorRelationMapper.toDtos(requestedAuthors));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<EbookAuthorRelationDto> update(@PathVariable("id") Integer id,
                                                          @RequestBody EbookAuthorRelationRequest ebookAuthorRelationRequest) throws ResourceNotFoundException{
@@ -63,7 +71,6 @@ public class EbookAuthorRelationResource {
         return ResponseEntity.ok(ebookAuthorRelationMapper.toDto(updatedEbookAuthorRelation));
     }
 
-    // check this
     @PostMapping
     public ResponseEntity<EbookAuthorRelationDto> create(@RequestBody EbookAuthorRelationRequest ebookAuthorRelationRequest)throws ResourceNotFoundException{
         Ebook requestedEbook = ebookService.findEbookById(ebookAuthorRelationRequest.getEbookId())
@@ -72,15 +79,13 @@ public class EbookAuthorRelationResource {
         Author requestedAuthor = authorService.findAuthorById(ebookAuthorRelationRequest.getAuthorId())
                 .orElseThrow(() -> new ResourceNotFoundException("Author not found " + ebookAuthorRelationRequest.getAuthorId()));
 
-        EbookAuthorRelation ebookAuthorRelation = new EbookAuthorRelation(
-                null,
-                requestedEbook,
-                requestedAuthor
-        );
+        EbookAuthorRelation createdEbookAuthorRelation = new EbookAuthorRelation();
+        createdEbookAuthorRelation.setEbook(requestedEbook);
+        createdEbookAuthorRelation.setAuthor(requestedAuthor);
 
         return ResponseEntity
-                .created(URI.create(PATH + "/" + ebookAuthorRelation.getId()))
-                .body(ebookAuthorRelationMapper.toDto(ebookAuthorRelation));
+                .created(URI.create(PATH + "/" + createdEbookAuthorRelation.getId()))
+                .body(ebookAuthorRelationMapper.toDto(createdEbookAuthorRelation));
     }
 
     @DeleteMapping("/{id}")

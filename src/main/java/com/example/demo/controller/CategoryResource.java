@@ -25,7 +25,7 @@ public class CategoryResource {
     CategoryMapper categoryMapper;
 
     @GetMapping
-    public ResponseEntity<List<CategoryDto>> getAll(){
+    public ResponseEntity<List<CategoryDto>> getAll() {
         return ResponseEntity.ok(categoryMapper.toDtos(categoryService.getAll()));
     }
 
@@ -39,7 +39,7 @@ public class CategoryResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDto> update(@PathVariable("id") Integer id,
-                                              @RequestBody CategoryRequest categoryRequest) throws ResourceNotFoundException{
+                                              @RequestBody CategoryRequest categoryRequest) throws ResourceNotFoundException {
         Category updatedCategory = categoryService.findCategoryById(id)
                 .orElseThrow(() -> new ResourceAccessException("Not found " + id));
 
@@ -50,14 +50,12 @@ public class CategoryResource {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDto> create(@RequestBody CategoryRequest category){
-        Category createdCategory = categoryService.save(
-                new Category(
-                        null,
-                        category.getName(),
-                        category.getNumberOfBooks()
-                )
-        );
+    public ResponseEntity<CategoryDto> create(@RequestBody CategoryRequest category) {
+        Category createdCategory = new Category();
+        createdCategory.setName(category.getName());
+        createdCategory.setNumberOfBooks(category.getNumberOfBooks());
+
+        categoryService.save(createdCategory);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdCategory.getId()))
@@ -65,7 +63,7 @@ public class CategoryResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) throws ResourceNotFoundException{
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) throws ResourceNotFoundException {
         Category deletedCategory = categoryService.findCategoryById(id)
                 .orElseThrow(() -> new ResourceAccessException("Not found" + id));
 

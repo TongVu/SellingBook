@@ -3,8 +3,11 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.EbookAuthorRelation;
 import com.example.demo.repository.EbookAuthorRelationRepository;
 import com.example.demo.service.EbookAuthorRelationService;
+import com.example.demo.service.dto.ebookAuthorRelationDto.EbookAuthorRelationDto;
+import com.example.demo.service.mapper.EbookAuthorRelationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +17,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EbookAuthorRelationServiceImpl implements EbookAuthorRelationService {
     @Autowired
-    private final EbookAuthorRelationRepository ebookAuthorRelationRepository;
+    private EbookAuthorRelationRepository ebookAuthorRelationRepository;
+    @Autowired
+    private EbookAuthorRelationMapper ebookAuthorRelationMapper;
 
     @Override
     public List<EbookAuthorRelation> getAll() {
@@ -34,5 +39,10 @@ public class EbookAuthorRelationServiceImpl implements EbookAuthorRelationServic
     @Override
     public Optional<EbookAuthorRelation> findEbookAuthorRelationById(Integer id) {
         return ebookAuthorRelationRepository.findById(id);
+    }
+
+    @Override
+    public List<EbookAuthorRelation> findByAuthorLastNameContainingIgnoreCase(String authorname){
+        return ebookAuthorRelationRepository.findByAuthorLastNameContainingIgnoreCase(authorname);
     }
 }

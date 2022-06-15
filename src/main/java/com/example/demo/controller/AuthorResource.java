@@ -43,32 +43,31 @@ public class AuthorResource {
         Author updatedAuthor = authorService.findAuthorById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
 
-        updatedAuthor.setAddress(author.getAddress());
         updatedAuthor.setDob(author.getDob());
+        updatedAuthor.setAddress(author.getAddress());
         updatedAuthor.setGender(author.getGender());
-        updatedAuthor.setEmail(author.getEmail());
-        updatedAuthor.setNationality(author.getNationality());
-        updatedAuthor.setPhone(author.getPhone());
         updatedAuthor.setFirstName(author.getFirstName());
         updatedAuthor.setLastName(author.getLastName());
+        updatedAuthor.setEmail(author.getEmail());
+        updatedAuthor.setPhone(author.getPhone());
+        updatedAuthor.setNationality(author.getNationality());
 
         return ResponseEntity.ok(authorMapper.toDto(authorService.save(updatedAuthor)));
     }
 
     @PostMapping
     public ResponseEntity<AuthorDto> createAuthor(@RequestBody AuthorRequest author) {
-        Author createdAuthor = authorService.save(
-                new Author(null,
-                        author.getDob(),
-                        author.getAddress(),
-                        author.getGender(),
-                        author.getFirstName(),
-                        author.getLastName(),
-                        author.getEmail(),
-                        author.getPhone(),
-                        author.getNationality()
-                )
-        );
+        Author createdAuthor = new Author();
+        createdAuthor.setDob(author.getDob());
+        createdAuthor.setAddress(author.getAddress());
+        createdAuthor.setGender(author.getGender());
+        createdAuthor.setFirstName(author.getFirstName());
+        createdAuthor.setLastName(author.getLastName());
+        createdAuthor.setEmail(author.getEmail());
+        createdAuthor.setPhone(author.getPhone());
+        createdAuthor.setNationality(author.getNationality());
+
+        authorService.save(createdAuthor);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdAuthor.getId()))

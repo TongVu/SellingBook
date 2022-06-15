@@ -29,30 +29,28 @@ public class AccountResource {
      */
 
     @GetMapping
-    public ResponseEntity<List<AccountDto>> getAll(){
+    public ResponseEntity<List<AccountDto>> getAll() {
         return ResponseEntity.ok(accountMapper.toDtos(accountService.getAll()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AccountDto> getAccountById(@PathVariable(value = "id") Integer id) throws Exception{
+    public ResponseEntity<AccountDto> getAccountById(@PathVariable(value = "id") Integer id) throws Exception {
         Account account = accountService.findAccountById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
         return ResponseEntity.ok(accountMapper.toDto(account));
     }
 
     @PostMapping
-    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountRequest newAccount){
-        Account createdAccount = accountService.save(
-                new Account(
-                        null,
-                        newAccount.getFirstName(),
-                        newAccount.getLastName(),
-                        newAccount.getDob(),
-                        newAccount.getGender(),
-                        newAccount.getEmail(),
-                        newAccount.getPhone(),
-                        newAccount.getAddress()
-                )
-        );
+    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountRequest newAccount) {
+        Account createdAccount = new Account();
+        createdAccount.setFirstName(newAccount.getFirstName());
+        createdAccount.setLastName(newAccount.getLastName());
+        createdAccount.setDob(newAccount.getDob());
+        createdAccount.setGender(newAccount.getGender());
+        createdAccount.setEmail(newAccount.getEmail());
+        createdAccount.setPhone(newAccount.getPhone());
+        createdAccount.setAddress(newAccount.getAddress());
+
+        accountService.save(createdAccount);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdAccount.getId()))
@@ -61,22 +59,23 @@ public class AccountResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable("id") Integer id,
-                                                    @RequestBody AccountRequest account) throws ResourceNotFoundException{
+                                                    @RequestBody AccountRequest account) throws ResourceNotFoundException {
         Account updatedAccount = accountService.findAccountById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
 
-        updatedAccount.setAddress(account.getAddress());
-        updatedAccount.setDob(account.getDob());
-        updatedAccount.setEmail(account.getEmail());
-        updatedAccount.setGender(account.getGender());
         updatedAccount.setFirstName(account.getFirstName());
         updatedAccount.setLastName(account.getLastName());
+        updatedAccount.setDob(account.getDob());
+        updatedAccount.setGender(account.getGender());
+        updatedAccount.setEmail(account.getEmail());
+        updatedAccount.setPhone(account.getPhone());
+        updatedAccount.setAddress(account.getAddress());
 
         return ResponseEntity.ok(accountMapper.toDto(
                 accountService.save(updatedAccount)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id)  throws ResourceNotFoundException{
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) throws ResourceNotFoundException {
         Account deletedAccount = accountService.findAccountById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
 
         accountService.deleteById(id);

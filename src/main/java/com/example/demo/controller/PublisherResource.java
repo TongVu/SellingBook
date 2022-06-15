@@ -36,26 +36,9 @@ public class PublisherResource {
         return ResponseEntity.ok(publisherMapper.toDto(publisher));
     }
 
-    @PostMapping
-    public ResponseEntity<PublisherDto> create(@RequestBody PublisherRequest publisherRequest) {
-        Publisher createdPublisher = publisherService.save(
-                new Publisher(
-                        null,
-                        publisherRequest.getName(),
-                        publisherRequest.getPhone(),
-                        publisherRequest.getAddress(),
-                        publisherRequest.getEmail()
-                )
-        );
-
-        return ResponseEntity
-                .created(URI.create(PATH + "/" + createdPublisher.getId()))
-                .body(publisherMapper.toDto(createdPublisher));
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<PublisherDto> update(@PathVariable("id") Integer id,
-                                                     @RequestBody PublisherRequest publisherRequest) throws ResourceNotFoundException {
+                                               @RequestBody PublisherRequest publisherRequest) throws ResourceNotFoundException {
         Publisher updatedPublisher = publisherService.findPublisherById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
 
@@ -66,6 +49,21 @@ public class PublisherResource {
 
 
         return ResponseEntity.ok(publisherMapper.toDto(publisherService.save(updatedPublisher)));
+    }
+
+    @PostMapping
+    public ResponseEntity<PublisherDto> create(@RequestBody PublisherRequest publisherRequest) {
+        Publisher createdPublisher = new Publisher();
+        createdPublisher.setName(publisherRequest.getName());
+        createdPublisher.setPhone(publisherRequest.getPhone());
+        createdPublisher.setAddress(publisherRequest.getAddress());
+        createdPublisher.setEmail(publisherRequest.getEmail());
+
+        publisherService.save(createdPublisher);
+
+        return ResponseEntity
+                .created(URI.create(PATH + "/" + createdPublisher.getId()))
+                .body(publisherMapper.toDto(createdPublisher));
     }
 
     @DeleteMapping("/{id}")

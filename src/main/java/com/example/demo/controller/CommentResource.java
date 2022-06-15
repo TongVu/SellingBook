@@ -30,7 +30,7 @@ public class CommentResource {
     AccountService accountService;
 
     @GetMapping
-    public ResponseEntity<List<CommentDto>> getAll(){
+    public ResponseEntity<List<CommentDto>> getAll() {
         return ResponseEntity.ok(commentMapper.toDtos(commentService.getAll()));
     }
 
@@ -44,7 +44,7 @@ public class CommentResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<CommentDto> update(@PathVariable("id") Integer id,
-                                             @RequestBody CommentRequest commentRequest) throws ResourceNotFoundException{
+                                             @RequestBody CommentRequest commentRequest) throws ResourceNotFoundException {
         Account requestedAccount = accountService.findAccountById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found " + commentRequest.getAccountId()));
 
@@ -62,27 +62,25 @@ public class CommentResource {
     }
 
     @PostMapping
-    public ResponseEntity<CommentDto> create(@RequestBody CommentRequest commentRequest) throws ResourceNotFoundException{
+    public ResponseEntity<CommentDto> create(@RequestBody CommentRequest commentRequest) throws ResourceNotFoundException {
         Account requestedAccount = accountService.findAccountById(commentRequest.getAccountId())
                 .orElseThrow(() -> new ResourceAccessException("Account not found " + commentRequest.getAccountId()));
 
-        Comment createdComment = commentService.save(
-                new Comment(
-                        null,
-                        commentRequest.getCommentContent(),
-                        commentRequest.getBookRating(),
-                        commentRequest.getCommentUpvote(),
-                        commentRequest.getDate(),
-                        requestedAccount
-                )
-        );
+        Comment createdComment = new Comment();
+        createdComment.setCommentContent(commentRequest.getCommentContent());
+        createdComment.setBookRating(commentRequest.getBookRating());
+        createdComment.setCommentUpvote(commentRequest.getCommentUpvote());
+        createdComment.setDate(commentRequest.getDate());
+        createdComment.setAccount(requestedAccount);
+
+        commentService.save(createdComment);
 
         return ResponseEntity.created(URI.create(
                 (PATH + "/" + createdComment.getId()))).body(commentMapper.toDto(createdComment));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws ResourceNotFoundException{
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws ResourceNotFoundException {
         Comment deletedComment = commentService.findCommentById(id)
                 .orElseThrow(() -> new ResourceAccessException("Comment not found " + id));
         commentService.deleteById(id);

@@ -78,17 +78,15 @@ public class InvoiceResource {
         Account requestedAccount = accountService.findAccountById(invoice.getAccountId())
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found " + invoice.getAccountId()));
 
-        Invoice createdInvoice = invoiceService.save(
-                new Invoice(
-                        null,
-                        invoice.getInvoiceDate(),
-                        invoice.getQuantity(),
-                        invoice.isPay(),
-                        invoice.getTotalPayment(),
-                        requestedCreditCard,
-                        requestedAccount
-                )
-        );
+        Invoice createdInvoice = new Invoice();
+        createdInvoice.setInvoiceDate(invoice.getInvoiceDate());
+        createdInvoice.setQuantity(invoice.getQuantity());
+        createdInvoice.setPay(invoice.isPay());
+        createdInvoice.setTotalPayment(invoice.getTotalPayment());
+        createdInvoice.setCreditCard(requestedCreditCard);
+        createdInvoice.setAccount(requestedAccount);
+
+        invoiceService.save(createdInvoice);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdInvoice.getId()))

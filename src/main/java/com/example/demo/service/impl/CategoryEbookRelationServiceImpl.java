@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.CategoryEbookRelation;
 import com.example.demo.repository.CategoryEbookRelationRepository;
 import com.example.demo.service.CategoryEbookRelationService;
+import com.example.demo.service.dto.categoryEbookRelationDto.CategoryEbookRelationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,5 +35,10 @@ public class CategoryEbookRelationServiceImpl implements CategoryEbookRelationSe
     @Override
     public Optional<CategoryEbookRelation> findCategoryEbookRelationById(Integer id) {
         return categoryEbookRelationRepository.findById(id);
+    }
+
+    @Override
+    public List<CategoryEbookRelationDto> findEbookByRating(Integer ratingPoints) {
+        return categoryEbookRelationRepository.findEbookByRating(ratingPoints);
     }
 }

@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.CategoryEbookRelation;
+import com.example.demo.service.dto.categoryEbookRelationDto.CategoryEbookRelationDto;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,4 +16,6 @@ public interface CategoryEbookRelationService {
     void deleteById(Integer id);
 
     Optional<CategoryEbookRelation> findCategoryEbookRelationById(Integer id);
+
+    List<CategoryEbookRelationDto> findEbookByRating(Integer ratingPoints);
 }
