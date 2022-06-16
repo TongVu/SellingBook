@@ -17,4 +17,6 @@ public interface EbookAuthorRelationService {
     Optional<EbookAuthorRelation> findEbookAuthorRelationById(Integer id);
 
     List<EbookAuthorRelation> findByAuthorLastNameContainingIgnoreCase(String authorname);
+
+    List<EbookAuthorRelationDto> findEbooksByPublisher(String publisherName);
 }

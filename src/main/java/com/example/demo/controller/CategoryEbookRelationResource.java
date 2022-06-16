@@ -43,10 +43,26 @@ public class CategoryEbookRelationResource {
 
         return ResponseEntity.ok(categoryEbookRelationMapper.toDto(foundCategoryEbookRelation));
     }
-     @GetMapping("/find")
-     public ResponseEntity<List<CategoryEbookRelationDto>> getEbooksHaveRatingGreaterThan(@RequestParam("rating") Integer ratingPoints){
-        return ResponseEntity.ok(categoryEbookRelationService.findEbookByRating(ratingPoints));
-     }
+
+    @GetMapping("/find")
+    public ResponseEntity<List<CategoryEbookRelationDto>> getEbooksHaveRatingGreaterThan(@RequestParam(value = "rating", required = false) Double ratingPoints,
+                                                                                         @RequestParam(value = "category", defaultValue = "empty", required = false) String categoryName) {
+        if(ratingPoints != null &&
+                !categoryName.equals("empty"))
+            return ResponseEntity.ok(categoryEbookRelationMapper.toDtos(
+                    categoryEbookRelationService
+                    .findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan(categoryName, ratingPoints)));
+
+        if (ratingPoints != null)
+            return ResponseEntity.ok(categoryEbookRelationService.findEbookByRating(ratingPoints));
+
+        if (!categoryName.equals("empty"))
+            return ResponseEntity.ok(
+                    categoryEbookRelationMapper.toDtos(
+                            categoryEbookRelationService.findEbookByCategoryNameIgnoreCase(categoryName)));
+
+        return ResponseEntity.noContent().build();
+    }
 
 
     @PutMapping("/{id}")
@@ -94,6 +110,4 @@ public class CategoryEbookRelationResource {
 
         return ResponseEntity.noContent().build();
     }
-
-
 }

@@ -11,6 +11,9 @@ import java.util.List;
 @Repository
 public interface CategoryEbookRelationRepository extends JpaRepository<CategoryEbookRelation, Integer> {
     @Query(nativeQuery = true)
-    List<CategoryEbookRelationDto> findEbookByRating(Integer ratingPoints);
+    List<CategoryEbookRelationDto> findEbookByRating(double ratingPoints);
 
+    List<CategoryEbookRelation> findEbookByCategoryNameIgnoreCase(String categoryName);
+
+    List<CategoryEbookRelation> findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan(String categoryName, double rating);
 }

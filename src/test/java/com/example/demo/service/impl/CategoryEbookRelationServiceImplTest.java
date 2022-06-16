@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.CategoryEbookRelation;
 import com.example.demo.service.CategoryEbookRelationService;
 import com.example.demo.service.dto.categoryEbookRelationDto.CategoryEbookRelationDto;
 import org.junit.jupiter.api.Test;
@@ -22,9 +23,23 @@ class CategoryEbookRelationServiceImplTest {
 
     @Test
     void findEbookByRating_shouldReturnEbooksHaveRatingLargerThanRatingPoints_whenFound() {
-        Integer RATING_POINTS = 4;
+        double RATING_POINTS = 4.0;
         List<CategoryEbookRelationDto> results = categoryEbookRelationService.findEbookByRating(RATING_POINTS);
         assertNotEquals(0, results.size());
         assertEquals(4, results.get(4).getRating());
+    }
+
+    @Test
+    void findEbookByCategoryName_shouldReturnData_whenFound() {
+        List<CategoryEbookRelation>  results = categoryEbookRelationService.findEbookByCategoryNameIgnoreCase("FANTASY");
+        assertNotEquals(0, results.size());
+    }
+
+    @Test
+    void findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan() {
+        List<CategoryEbookRelation> results = categoryEbookRelationService
+                .findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan("fantasy", 3.2);
+
+        assertNotEquals(0, results.size());
     }
 }

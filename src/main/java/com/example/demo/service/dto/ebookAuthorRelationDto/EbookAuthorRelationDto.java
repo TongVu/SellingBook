@@ -1,5 +1,6 @@
 package com.example.demo.service.dto.ebookAuthorRelationDto;
 
+import com.example.demo.entity.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,6 @@ public class EbookAuthorRelationDto {
 
     private String authorEmail;
 
-    private String authorGender;
+    private Gender authorGender;
 
 }

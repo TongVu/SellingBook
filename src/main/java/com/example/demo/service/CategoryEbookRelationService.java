@@ -17,5 +17,9 @@ public interface CategoryEbookRelationService {
 
     Optional<CategoryEbookRelation> findCategoryEbookRelationById(Integer id);
 
-    List<CategoryEbookRelationDto> findEbookByRating(Integer ratingPoints);
+    List<CategoryEbookRelationDto> findEbookByRating(double ratingPoints);
+
+    List<CategoryEbookRelation> findEbookByCategoryNameIgnoreCase(String categoryName);
+
+    List<CategoryEbookRelation> findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan(String categoryName, double rating);
 }

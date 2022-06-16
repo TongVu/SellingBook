@@ -37,8 +37,11 @@ class EbookAuthorRelationServiceImplTest {
 
     @Test
     void findByAuthorLastNameContainingIgnoreCase() {
-        System.out.println(ebookAuthorRelationService.findByAuthorLastNameContainingIgnoreCase("murakami").get(0).toString());
-
         assertNotEquals(0, ebookAuthorRelationService.findByAuthorLastNameContainingIgnoreCase("murakami"));
+    }
+
+    @Test
+    void findEbooksByPublisher() {
+        assertNotEquals(0, ebookAuthorRelationService.findEbooksByPublisher("Stairway Press"));
     }
 }

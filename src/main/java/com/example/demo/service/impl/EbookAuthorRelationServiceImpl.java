@@ -45,4 +45,9 @@ public class EbookAuthorRelationServiceImpl implements EbookAuthorRelationServic
     public List<EbookAuthorRelation> findByAuthorLastNameContainingIgnoreCase(String authorname){
         return ebookAuthorRelationRepository.findByAuthorLastNameContainingIgnoreCase(authorname);
     }
+
+    @Override
+    public List<EbookAuthorRelationDto> findEbooksByPublisher(String publisherName) {
+        return ebookAuthorRelationRepository.findEbooksByPublisher(publisherName);
+    }
 }

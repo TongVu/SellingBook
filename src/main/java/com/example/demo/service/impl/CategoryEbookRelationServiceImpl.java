@@ -38,7 +38,18 @@ public class CategoryEbookRelationServiceImpl implements CategoryEbookRelationSe
     }
 
     @Override
-    public List<CategoryEbookRelationDto> findEbookByRating(Integer ratingPoints) {
+    public List<CategoryEbookRelationDto> findEbookByRating(double ratingPoints) {
         return categoryEbookRelationRepository.findEbookByRating(ratingPoints);
+    }
+
+    @Override
+    public List<CategoryEbookRelation> findEbookByCategoryNameIgnoreCase(String categoryName) {
+        return categoryEbookRelationRepository.findEbookByCategoryNameIgnoreCase(categoryName);
+    }
+
+    @Override
+    public List<CategoryEbookRelation> findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan(String categoryName, double rating) {
+        return categoryEbookRelationRepository
+                .findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan(categoryName, rating);
     }
 }

@@ -46,10 +46,22 @@ public class EbookAuthorRelationResource {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<List<EbookAuthorRelationDto>> getAuthorsByLastNameContaining(@RequestParam("authorname") String authorName){
-        List<EbookAuthorRelation> requestedAuthors = ebookAuthorRelationService.findByAuthorLastNameContainingIgnoreCase(authorName);
+    public ResponseEntity<List<EbookAuthorRelationDto>> getAuthorsByLastNameContaining(
+            @RequestParam(value = "authorname", defaultValue="empty", required = false) String authorName,
+            @RequestParam(value = "publishername", defaultValue="empty", required = false) String publisherName){
+        if(!publisherName.equals("empty")){
+            List<EbookAuthorRelationDto> results = ebookAuthorRelationService.findEbooksByPublisher(publisherName);
 
-        return ResponseEntity.ok(ebookAuthorRelationMapper.toDtos(requestedAuthors));
+            return ResponseEntity.ok(results);
+        }
+        
+        if(!authorName.equals("empty")){
+            List<EbookAuthorRelation> requestedAuthors = ebookAuthorRelationService.findByAuthorLastNameContainingIgnoreCase(authorName);
+
+            return ResponseEntity.ok(ebookAuthorRelationMapper.toDtos(requestedAuthors));
+        }
+
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
