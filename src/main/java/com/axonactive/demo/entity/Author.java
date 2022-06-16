@@ -1,0 +1,47 @@
+package com.axonactive.demo.entity;
+
+import lombok.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+
+@Entity
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table
+public class Author {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @NotNull
+    private LocalDate dob;
+
+    private String address;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @NotNull
+    private String firstName;
+
+    @NotNull
+    private String lastName;
+
+    @NotNull
+    @Column(unique = true)
+    private String email;
+
+    @NotNull
+    @Column(unique = true)
+    private String phone;
+
+    @NotNull
+    private String nationality;
+}
