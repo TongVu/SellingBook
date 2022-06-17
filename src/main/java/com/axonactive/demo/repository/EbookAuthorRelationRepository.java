@@ -13,7 +13,7 @@ import java.util.List;
 public interface EbookAuthorRelationRepository extends JpaRepository<EbookAuthorRelation, Integer> {
     List<EbookAuthorRelation> findByAuthorLastNameContainingIgnoreCase(String authorname);
 
-    @Query("SELECT new com.axonactive.demo.service.dto.ebookAuthorRelationDto.EbookAuthorRelationDto(e.title, e.page, e.introduction, e.publisher.name, concat(concat(a.firstName, ' '), a.lastName), a.email, a.gender) " +
+    @Query("SELECT new com.axonactive.demo.service.dto.ebookAuthorRelationDto.EbookAuthorRelationDto(e.title, e.page, e.introduction, e.publisher.name, (a.firstName || ' ' || a.lastName), a.email, a.gender) " +
             "FROM EbookAuthorRelation ea, Ebook e, Author a " +
             "WHERE ea.ebook.id = e.id AND ea.author.id = a.id AND e.publisher.name = ?1 ")
     List<EbookAuthorRelationDto> findEbooksByPublisher(String publisherName);

@@ -72,21 +72,7 @@ public class InvoiceResource {
 
     @PostMapping
     public ResponseEntity<InvoiceDto> create(@RequestBody InvoiceRequest invoice) throws ResourceNotFoundException {
-        CreditCard requestedCreditCard = creditCardService.findCreditCardById(invoice.getCreditCardId())
-                .orElseThrow(() -> new ResourceNotFoundException("Credit card not found " + invoice.getCreditCardId()));
-
-        Account requestedAccount = accountService.findAccountById(invoice.getAccountId())
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found " + invoice.getAccountId()));
-
-        Invoice createdInvoice = new Invoice();
-        createdInvoice.setInvoiceDate(invoice.getInvoiceDate());
-        createdInvoice.setQuantity(invoice.getQuantity());
-        createdInvoice.setPay(invoice.isPay());
-        createdInvoice.setTotalPayment(invoice.getTotalPayment());
-        createdInvoice.setCreditCard(requestedCreditCard);
-        createdInvoice.setAccount(requestedAccount);
-
-        invoiceService.save(createdInvoice);
+        Invoice createdInvoice = invoiceService.create(invoice);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdInvoice.getId()))

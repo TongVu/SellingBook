@@ -45,23 +45,22 @@ public class CategoryEbookRelationResource {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<List<CategoryEbookRelationDto>> getEbooksHaveRatingGreaterThan(@RequestParam(value = "rating", required = false) Double ratingPoints,
-                                                                                         @RequestParam(value = "category", defaultValue = "empty", required = false) String categoryName) {
+    public ResponseEntity<?> getEbooksHaveRatingGreaterThan(@RequestParam(value = "rating", required = false) Double ratingPoints,
+                                                            @RequestParam(value = "category", defaultValue = "empty", required = false) String categoryName) {
         if(ratingPoints != null &&
                 !categoryName.equals("empty"))
             return ResponseEntity.ok(categoryEbookRelationMapper.toDtos(
-                    categoryEbookRelationService
-                    .findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan(categoryName, ratingPoints)));
+                    categoryEbookRelationService.findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan(categoryName, ratingPoints)));
 
         if (ratingPoints != null)
-            return ResponseEntity.ok(categoryEbookRelationService.findEbookByRating(ratingPoints));
+            return ResponseEntity.ok(categoryEbookRelationService.findEbookRatingGreaterThan(ratingPoints));
 
         if (!categoryName.equals("empty"))
             return ResponseEntity.ok(
                     categoryEbookRelationMapper.toDtos(
                             categoryEbookRelationService.findEbookByCategoryNameIgnoreCase(categoryName)));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Please provide Request param");
     }
 
 

@@ -26,4 +26,19 @@ class AccountServiceImpTest {
     void findAccountByPhone_shouldReturnData_whenFound() {
         assertNotEquals(0, accountService.findAccountByPhone("0914074837"));
     }
+
+    @Test
+    void findPurchasedEbooks() {
+        assertNotEquals(0, accountService.findAccountById(5));
+    }
+
+    @Test
+    void findNotPurchasedEbooks() {
+        assertNotEquals(0, accountService.findAccountById(1));
+    }
+
+    @Test
+    void findAllInvoices() {
+        assertNotEquals(0, accountService.findAllInvoices(5));
+    }
 }

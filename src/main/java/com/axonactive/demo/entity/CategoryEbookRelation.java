@@ -20,7 +20,7 @@ import javax.persistence.*;
                         columns = {
                                 @ColumnResult(name = "bookTitle", type = String.class),
                                 @ColumnResult(name = "bookPage", type = Integer.class),
-                                @ColumnResult(name = "rating", type = Integer.class),
+                                @ColumnResult(name = "rating", type = Double.class),
                                 @ColumnResult(name = "introduction", type = String.class),
                                 @ColumnResult(name = "categoryName", type = String.class),
                                 @ColumnResult(name = "publisherName", type = String.class) })})
@@ -35,7 +35,7 @@ import javax.persistence.*;
         resultSetMapping = "ebookHasRatingGreaterThan")
 
 public class CategoryEbookRelation {
-    public static final String FIND_EBOOK_BY_RATING = "CategoryEbookRelation.findEbookByRating";
+    public static final String FIND_EBOOK_BY_RATING = "CategoryEbookRelation.findEbookRatingGreaterThan";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -13,11 +13,12 @@ public interface CategoryEbookRelationService {
 
     void deleteById(Integer id);
 
-    Optional<CategoryEbookRelation> findCategoryEbookRelationById(Integer id);
-
-    List<CategoryEbookRelationDto> findEbookByRating(double ratingPoints);
+    List<CategoryEbookRelationDto> findEbookRatingGreaterThan(double ratingPoints);
 
     List<CategoryEbookRelation> findEbookByCategoryNameIgnoreCase(String categoryName);
 
+    Optional<CategoryEbookRelation> findCategoryEbookRelationById(Integer id);
+
     List<CategoryEbookRelation> findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan(String categoryName, double rating);
+
 }

@@ -5,6 +5,8 @@ import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.entity.Account;
 import com.axonactive.demo.exception.ResourceNotFoundException;
 import com.axonactive.demo.service.dto.accountDto.AccountDto;
+import com.axonactive.demo.service.dto.accountDto.AccountInvocesDto;
+import com.axonactive.demo.service.dto.ebookDto.EbookPurchasedDto;
 import com.axonactive.demo.service.mapper.AccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,30 +41,39 @@ public class AccountResource {
         return ResponseEntity.ok(accountMapper.toDto(account));
     }
 
+    @GetMapping("/{id}/purchasedbooks")
+    public ResponseEntity<List<EbookPurchasedDto>> getPurcharsedEbooks(@PathVariable("id") Integer id,
+                                                                       @RequestParam(value = "paid") Boolean isPay) throws Exception {
+        Account account = accountService.findAccountById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+
+        if (isPay)
+            return ResponseEntity.ok(accountService.findPurchasedEbooks(id));
+
+        return ResponseEntity.ok(accountService.findNotPurchasedEbooks(id));
+    }
+
+    @GetMapping("/{id}/invoices")
+    public ResponseEntity<List<AccountInvocesDto>> getAllInvoices(@PathVariable("id") Integer id) throws Exception{
+        Account account = accountService.findAccountById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+
+        return ResponseEntity.ok(accountService.findAllInvoices(id));
+    }
+
     @GetMapping("/find")
-    public ResponseEntity<AccountDto> getAccountByEmailLikeOrByPhone(@RequestParam(value = "phone", defaultValue ="empty", required = false) String phone,
-                                                                     @RequestParam(value = "email", defaultValue ="empty", required = false) String email){
-        if(!phone.equalsIgnoreCase("empty"))
+    public ResponseEntity<?> getAccountByEmailLikeOrByPhone(@RequestParam(value = "phone", defaultValue = "empty", required = false) String phone,
+                                                                     @RequestParam(value = "email", defaultValue = "empty", required = false) String email) {
+        if (!phone.equalsIgnoreCase("empty"))
             return ResponseEntity.ok(accountMapper.toDto(accountService.findAccountByPhone(phone).get()));
 
-        if(!email.equalsIgnoreCase("empty"))
+        if (!email.equalsIgnoreCase("empty"))
             return ResponseEntity.ok(accountMapper.toDto(accountService.findAccountByEmailContaining(email).get()));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Please provide Request param");
     }
 
     @PostMapping
-    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountRequest newAccount) {
-        Account createdAccount = new Account();
-        createdAccount.setFirstName(newAccount.getFirstName());
-        createdAccount.setLastName(newAccount.getLastName());
-        createdAccount.setDob(newAccount.getDob());
-        createdAccount.setGender(newAccount.getGender());
-        createdAccount.setEmail(newAccount.getEmail());
-        createdAccount.setPhone(newAccount.getPhone());
-        createdAccount.setAddress(newAccount.getAddress());
-
-        accountService.save(createdAccount);
+    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountRequest accountRequest) {
+        Account createdAccount = accountService.save(accountRequest);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdAccount.getId()))
@@ -74,14 +85,7 @@ public class AccountResource {
                                                     @RequestBody AccountRequest account) throws ResourceNotFoundException {
         Account updatedAccount = accountService.findAccountById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
 
-        updatedAccount.setFirstName(account.getFirstName());
-        updatedAccount.setLastName(account.getLastName());
-        updatedAccount.setDob(account.getDob());
-        updatedAccount.setGender(account.getGender());
-        updatedAccount.setEmail(account.getEmail());
-        updatedAccount.setPhone(account.getPhone());
-        updatedAccount.setAddress(account.getAddress());
-
+        accountService.update(updatedAccount, account);
         return ResponseEntity.ok(accountMapper.toDto(
                 accountService.save(updatedAccount)));
     }

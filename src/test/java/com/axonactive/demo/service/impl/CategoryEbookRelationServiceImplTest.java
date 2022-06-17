@@ -22,9 +22,9 @@ class CategoryEbookRelationServiceImplTest {
     CategoryEbookRelationService categoryEbookRelationService;
 
     @Test
-    void findEbookByRating_shouldReturnEbooksHaveRatingLargerThanRatingPoints_whenFound() {
+    void findEbookByRating_shouldReturnData_whenFound() {
         double RATING_POINTS = 4.0;
-        List<CategoryEbookRelationDto> results = categoryEbookRelationService.findEbookByRating(RATING_POINTS);
+        List<CategoryEbookRelationDto> results = categoryEbookRelationService.findEbookRatingGreaterThan(RATING_POINTS);
         assertNotEquals(0, results.size());
         assertEquals(4, results.get(4).getRating());
     }
@@ -36,9 +36,8 @@ class CategoryEbookRelationServiceImplTest {
     }
 
     @Test
-    void findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan() {
-        List<CategoryEbookRelation> results = categoryEbookRelationService
-                .findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan("fantasy", 3.2);
+    void findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan_shouldReturnData_whenFound() {
+        List<CategoryEbookRelation> results = categoryEbookRelationService.findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan("FANTASY" ,3.2);
 
         assertNotEquals(0, results.size());
     }

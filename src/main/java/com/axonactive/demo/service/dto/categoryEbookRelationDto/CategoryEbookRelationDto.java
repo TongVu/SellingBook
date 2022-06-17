@@ -14,7 +14,7 @@ public class CategoryEbookRelationDto {
 
     private Integer bookPage;
 
-    private Integer rating;
+    private Double rating;
 
     private String introduction;
 
