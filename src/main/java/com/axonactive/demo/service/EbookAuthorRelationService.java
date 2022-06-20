@@ -1,6 +1,8 @@
 package com.axonactive.demo.service;
 
+import com.axonactive.demo.controller.request.EbookAuthorRelationRequest;
 import com.axonactive.demo.entity.EbookAuthorRelation;
+import com.axonactive.demo.exception.ResourceNotFoundException;
 import com.axonactive.demo.service.dto.ebookAuthorRelationDto.EbookAuthorRelationDto;
 
 import java.util.List;
@@ -14,6 +16,10 @@ public interface EbookAuthorRelationService {
     void deleteById(Integer id);
 
     Optional<EbookAuthorRelation> findEbookAuthorRelationById(Integer id);
+
+    EbookAuthorRelation update(EbookAuthorRelation updatedEbookAuthorRelation, EbookAuthorRelationRequest ebookAuthorRelationRequest) throws ResourceNotFoundException;
+
+    EbookAuthorRelation create(EbookAuthorRelationRequest ebookAuthorRelationRequest) throws ResourceNotFoundException ;
 
     List<EbookAuthorRelation> findByAuthorLastNameContainingIgnoreCase(String authorname);
 

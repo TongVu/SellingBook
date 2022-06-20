@@ -43,19 +43,14 @@ public class CategoryResource {
         Category updatedCategory = categoryService.findCategoryById(id)
                 .orElseThrow(() -> new ResourceAccessException("Not found " + id));
 
-        updatedCategory.setName(categoryRequest.getName());
-        updatedCategory.setNumberOfBooks(categoryRequest.getNumberOfBooks());
+        Category category = categoryService.update(updatedCategory, categoryRequest);
 
-        return ResponseEntity.ok(categoryMapper.toDto(categoryService.save(updatedCategory)));
+        return ResponseEntity.ok(categoryMapper.toDto(category));
     }
 
     @PostMapping
     public ResponseEntity<CategoryDto> create(@RequestBody CategoryRequest category) {
-        Category createdCategory = new Category();
-        createdCategory.setName(category.getName());
-        createdCategory.setNumberOfBooks(category.getNumberOfBooks());
-
-        categoryService.save(createdCategory);
+        Category createdCategory = categoryService.create(category);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdCategory.getId()))

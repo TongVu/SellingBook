@@ -67,34 +67,18 @@ public class CategoryEbookRelationResource {
     @PutMapping("/{id}")
     public ResponseEntity<CategoryEbookRelationDto> update(@PathVariable("id") Integer id,
                                                            @RequestBody CategoryEbookRelationRequest categoryEbookRelationRequest) throws ResourceNotFoundException {
-        Ebook requestedEbook = ebookService.findEbookById(categoryEbookRelationRequest.getEbookId())
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found " + categoryEbookRelationRequest.getEbookId()));
-
-        Category requestedCategory = categoryService.findCategoryById(categoryEbookRelationRequest.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found " + categoryEbookRelationRequest.getCategoryId()));
 
         CategoryEbookRelation updatedCategoryEbookRelation = categoryEbookRelationService.findCategoryEbookRelationById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
 
-        updatedCategoryEbookRelation.setCategory(requestedCategory);
-        updatedCategoryEbookRelation.setEbook(requestedEbook);
+       CategoryEbookRelation categoryEbookRelation = categoryEbookRelationService.update(updatedCategoryEbookRelation, categoryEbookRelationRequest);
 
-        return ResponseEntity.ok(categoryEbookRelationMapper.toDto(categoryEbookRelationService.save(updatedCategoryEbookRelation)));
+        return ResponseEntity.ok(categoryEbookRelationMapper.toDto(categoryEbookRelation));
     }
 
     @PostMapping
     public ResponseEntity<CategoryEbookRelationDto> create(@RequestBody CategoryEbookRelationRequest categoryEbookRelationRequest) throws ResourceNotFoundException {
-
-        Ebook requestedEbook = ebookService.findEbookById(categoryEbookRelationRequest.getEbookId())
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found " + categoryEbookRelationRequest.getEbookId()));
-
-        Category requestedCategory = categoryService.findCategoryById(categoryEbookRelationRequest.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found " + categoryEbookRelationRequest.getCategoryId()));
-
-        CategoryEbookRelation createdCategoryEbookRelation = new CategoryEbookRelation();
-        createdCategoryEbookRelation.setCategory(requestedCategory);
-        createdCategoryEbookRelation.setEbook(requestedEbook);
-        categoryEbookRelationService.save(createdCategoryEbookRelation);
+        CategoryEbookRelation createdCategoryEbookRelation = categoryEbookRelationService.create(categoryEbookRelationRequest);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdCategoryEbookRelation.getId()))

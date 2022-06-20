@@ -47,29 +47,13 @@ public class CreditCardResource {
                                                 @RequestBody CreditCardRequest creditCardRequest) throws ResourceNotFoundException {
         CreditCard updatedCreditCard = creditCardService.findCreditCardById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Credit card not found " + id));
-        Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found " + creditCardRequest.getAccountId()));
 
-        updatedCreditCard.setAccount(requestedAccount);
-        updatedCreditCard.setCardNumber(creditCardRequest.getCardNumber());
-        updatedCreditCard.setExpiredDate(creditCardRequest.getExpiredDate());
-        updatedCreditCard.setBalance(creditCardRequest.getBalance());
-
-        return ResponseEntity.ok(creditCardMapper.toDto(creditCardService.save(updatedCreditCard)));
+        return ResponseEntity.ok(creditCardMapper.toDto(creditCardService.update(updatedCreditCard, creditCardRequest)));
     }
 
     @PostMapping
     public ResponseEntity<CreditCardDto> create(@RequestBody CreditCardRequest creditCardRequest) throws ResourceNotFoundException {
-        Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + creditCardRequest.getAccountId()));
-
-        CreditCard createdCreditCard = new CreditCard();
-        createdCreditCard.setAccount(requestedAccount);
-        createdCreditCard.setCardNumber(creditCardRequest.getCardNumber());
-        createdCreditCard.setExpiredDate(creditCardRequest.getExpiredDate());
-        createdCreditCard.setBalance(creditCardRequest.getBalance());
-
-        creditCardService.save(createdCreditCard);
+        CreditCard createdCreditCard = creditCardService.create(creditCardRequest);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdCreditCard.getId()))

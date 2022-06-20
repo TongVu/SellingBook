@@ -10,6 +10,7 @@ import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.CreditCardService;
 import com.axonactive.demo.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.ResourceClosedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,24 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public void deleteById(Integer id) {
         invoiceRepository.deleteById(id);
+    }
+
+    @Override
+    public Invoice update(Invoice updatedInvoice, InvoiceRequest invoiceRequest) throws ResourceNotFoundException {
+        Account requestedAccount = accountService.findAccountById(invoiceRequest.getAccountId())
+                .orElseThrow(() -> new ResourceClosedException("Account not found " + invoiceRequest.getAccountId()));
+
+        CreditCard requestedCreditCard = creditCardService.findCreditCardById(invoiceRequest.getCreditCardId())
+                .orElseThrow(() -> new ResourceNotFoundException("Credit card not found " + invoiceRequest.getCreditCardId()));
+
+
+        updatedInvoice.setInvoiceDate(invoiceRequest.getInvoiceDate());
+        updatedInvoice.setQuantity(invoiceRequest.getQuantity());
+        updatedInvoice.setPay(invoiceRequest.isPay());
+        updatedInvoice.setTotalPayment(invoiceRequest.getTotalPayment());
+        updatedInvoice.setCreditCard(requestedCreditCard);
+        updatedInvoice.setAccount(requestedAccount);
+        return invoiceRepository.save(updatedInvoice);
     }
 
     @Override

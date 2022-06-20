@@ -53,37 +53,15 @@ public class EbookResource {
     @PutMapping("/{id}")
     public ResponseEntity<EbookDto> update(@PathVariable("id") Integer id,
                                            @RequestBody EbookRequest ebookRequest) throws ResourceNotFoundException {
-        Publisher requestedPublisher = publisherService.findPublisherById(ebookRequest.getPublisherId())
-                .orElseThrow(() -> new ResourceNotFoundException("Publisher not found " + ebookRequest.getPublisherId()));
-
         Ebook updatedEbook = ebookService.findEbookById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ebook not found " + id));
 
-        updatedEbook.setPage(ebookRequest.getPage());
-        updatedEbook.setTitle(ebookRequest.getTitle());
-        updatedEbook.setRating(ebookRequest.getRating());
-        updatedEbook.setIntroduction(ebookRequest.getIntroduction());
-        updatedEbook.setPurchased(ebookRequest.getPurchased());
-        updatedEbook.setViewLinkStatus(ebookRequest.getViewLinkStatus());
-        updatedEbook.setPublisher(requestedPublisher);
-
-        return ResponseEntity.ok(ebookMapper.toDto(ebookService.save(updatedEbook)));
+        return ResponseEntity.ok(ebookMapper.toDto(ebookService.update(updatedEbook, ebookRequest)));
     }
 
     @PostMapping
     public ResponseEntity<EbookDto> create(@RequestBody EbookRequest ebook) throws ResourceNotFoundException {
-        Publisher requestedPublisher = publisherService.findPublisherById(ebook.getPublisherId())
-                .orElseThrow(() -> new ResourceAccessException("Not found publisher " + ebook.getPublisherId()));
-
-        Ebook createdEbook = new Ebook();
-        createdEbook.setPage(ebook.getPage());
-        createdEbook.setTitle(ebook.getTitle());
-        createdEbook.setRating(ebook.getRating());
-        createdEbook.setIntroduction(ebook.getIntroduction());
-        createdEbook.setPurchased(ebook.getPurchased());
-        createdEbook.setViewLinkStatus(ebook.getViewLinkStatus());
-        createdEbook.setPublisher(requestedPublisher);
-        ebookService.save(createdEbook);
+        Ebook createdEbook = ebookService.create(ebook);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdEbook.getId()))

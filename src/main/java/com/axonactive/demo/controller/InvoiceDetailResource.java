@@ -51,39 +51,16 @@ public class InvoiceDetailResource {
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDetailDto> update(@PathVariable("id") Integer id,
                                                    @RequestBody InvoiceDetailRequest invoiceDetailRequest) throws ResourceNotFoundException {
-        Invoice requestedInvoice = invoiceService.findInvoiceById(invoiceDetailRequest.getInvoiceId())
-                .orElseThrow(() -> new ResourceClosedException("Invoice not found " + invoiceDetailRequest.getInvoiceId()));
-
-        Ebook requestedEbook = ebookService.findEbookById(invoiceDetailRequest.getEbookId())
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found " + invoiceDetailRequest.getEbookId()));
-
         InvoiceDetail updatedInvoiceDetail = invoiceDetailService.findInvoiceDetailById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice detail not found " + id));
 
-        updatedInvoiceDetail.setDateAdded(invoiceDetailRequest.getDateAdded());
-        updatedInvoiceDetail.setEbookPrice(invoiceDetailRequest.getEbookPrice());
-        updatedInvoiceDetail.setInvoice(requestedInvoice);
-        updatedInvoiceDetail.setEbook(requestedEbook);
-
         return ResponseEntity
-                .ok(invoiceDetailMapper.toDto(invoiceDetailService.save(updatedInvoiceDetail)));
+                .ok(invoiceDetailMapper.toDto(invoiceDetailService.update(updatedInvoiceDetail, invoiceDetailRequest)));
     }
 
     @PostMapping
     public ResponseEntity<InvoiceDetailDto> create(@RequestBody InvoiceDetailRequest invoiceDetail) throws ResourceNotFoundException {
-        Invoice requestedInvoice = invoiceService.findInvoiceById(invoiceDetail.getInvoiceId())
-                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found " + invoiceDetail.getInvoiceId()));
-
-        Ebook requestedEbook = ebookService.findEbookById(invoiceDetail.getEbookId())
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found" + invoiceDetail.getEbookId()));
-
-        InvoiceDetail createdInvoiceDetail = new InvoiceDetail();
-        createdInvoiceDetail.setDateAdded(invoiceDetail.getDateAdded());
-        createdInvoiceDetail.setEbookPrice(invoiceDetail.getEbookPrice());
-        createdInvoiceDetail.setInvoice(requestedInvoice);
-        createdInvoiceDetail.setEbook(requestedEbook);
-
-        invoiceDetailService.save(createdInvoiceDetail);
+        InvoiceDetail createdInvoiceDetail = invoiceDetailService.create(invoiceDetail);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdInvoiceDetail.getId()))

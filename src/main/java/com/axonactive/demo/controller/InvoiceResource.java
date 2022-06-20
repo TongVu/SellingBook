@@ -51,23 +51,10 @@ public class InvoiceResource {
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDto> update(@PathVariable("id") Integer id,
                                              @RequestBody InvoiceRequest invoiceRequest) throws ResourceNotFoundException {
-        Account requestedAccount = accountService.findAccountById(invoiceRequest.getAccountId())
-                .orElseThrow(() -> new ResourceClosedException("Account not found " + invoiceRequest.getAccountId()));
-
-        CreditCard requestedCreditCard = creditCardService.findCreditCardById(invoiceRequest.getCreditCardId())
-                .orElseThrow(() -> new ResourceNotFoundException("Credit card not found " + invoiceRequest.getCreditCardId()));
-
         Invoice updatedInvoice = invoiceService.findInvoiceById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice not found " + id));
 
-        updatedInvoice.setInvoiceDate(invoiceRequest.getInvoiceDate());
-        updatedInvoice.setQuantity(invoiceRequest.getQuantity());
-        updatedInvoice.setPay(invoiceRequest.isPay());
-        updatedInvoice.setTotalPayment(invoiceRequest.getTotalPayment());
-        updatedInvoice.setCreditCard(requestedCreditCard);
-        updatedInvoice.setAccount(requestedAccount);
-
-        return ResponseEntity.ok(invoiceMapper.toDto(invoiceService.save(updatedInvoice)));
+        return ResponseEntity.ok(invoiceMapper.toDto(invoiceService.update(updatedInvoice, invoiceRequest)));
     }
 
     @PostMapping

@@ -45,35 +45,15 @@ public class CommentResource {
     @PutMapping("/{id}")
     public ResponseEntity<CommentDto> update(@PathVariable("id") Integer id,
                                              @RequestBody CommentRequest commentRequest) throws ResourceNotFoundException {
-        Account requestedAccount = accountService.findAccountById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found " + commentRequest.getAccountId()));
-
         Comment updatedComment = commentService.findCommentById(id)
                 .orElseThrow(() -> new ResourceAccessException("Comment not found " + id));
 
-        updatedComment.setCommentContent(commentRequest.getCommentContent());
-        updatedComment.setBookRating(commentRequest.getBookRating());
-        updatedComment.setCommentUpvote(commentRequest.getCommentUpvote());
-        updatedComment.setDate(commentRequest.getDate());
-        updatedComment.setAccount(requestedAccount);
-        commentService.save(updatedComment);
-
-        return ResponseEntity.ok(commentMapper.toDto(commentService.save(updatedComment)));
+        return ResponseEntity.ok(commentMapper.toDto(commentService.update(updatedComment, commentRequest)));
     }
 
     @PostMapping
     public ResponseEntity<CommentDto> create(@RequestBody CommentRequest commentRequest) throws ResourceNotFoundException {
-        Account requestedAccount = accountService.findAccountById(commentRequest.getAccountId())
-                .orElseThrow(() -> new ResourceAccessException("Account not found " + commentRequest.getAccountId()));
-
-        Comment createdComment = new Comment();
-        createdComment.setCommentContent(commentRequest.getCommentContent());
-        createdComment.setBookRating(commentRequest.getBookRating());
-        createdComment.setCommentUpvote(commentRequest.getCommentUpvote());
-        createdComment.setDate(commentRequest.getDate());
-        createdComment.setAccount(requestedAccount);
-
-        commentService.save(createdComment);
+        Comment createdComment = commentService.create(commentRequest);
 
         return ResponseEntity.created(URI.create(
                 (PATH + "/" + createdComment.getId()))).body(commentMapper.toDto(createdComment));

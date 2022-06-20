@@ -14,6 +14,8 @@ public interface InvoiceService {
 
     void deleteById(Integer id);
 
+    Invoice update(Invoice updatedInvoice, InvoiceRequest invoiceRequest) throws ResourceNotFoundException;
+
     Optional<Invoice> findInvoiceById(Integer id);
 
     Invoice create(InvoiceRequest invoiceRequest) throws ResourceNotFoundException;

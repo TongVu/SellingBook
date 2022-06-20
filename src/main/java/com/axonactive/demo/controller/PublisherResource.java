@@ -42,24 +42,13 @@ public class PublisherResource {
         Publisher updatedPublisher = publisherService.findPublisherById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
 
-        updatedPublisher.setName(publisherRequest.getName());
-        updatedPublisher.setPhone(publisherRequest.getPhone());
-        updatedPublisher.setAddress(publisherRequest.getAddress());
-        updatedPublisher.setEmail(publisherRequest.getEmail());
 
-
-        return ResponseEntity.ok(publisherMapper.toDto(publisherService.save(updatedPublisher)));
+        return ResponseEntity.ok(publisherMapper.toDto(publisherService.update(updatedPublisher, publisherRequest)));
     }
 
     @PostMapping
     public ResponseEntity<PublisherDto> create(@RequestBody PublisherRequest publisherRequest) {
-        Publisher createdPublisher = new Publisher();
-        createdPublisher.setName(publisherRequest.getName());
-        createdPublisher.setPhone(publisherRequest.getPhone());
-        createdPublisher.setAddress(publisherRequest.getAddress());
-        createdPublisher.setEmail(publisherRequest.getEmail());
-
-        publisherService.save(createdPublisher);
+        Publisher createdPublisher = publisherService.create(publisherRequest);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdPublisher.getId()))

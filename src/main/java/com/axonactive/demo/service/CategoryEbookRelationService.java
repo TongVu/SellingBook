@@ -1,6 +1,8 @@
 package com.axonactive.demo.service;
 
+import com.axonactive.demo.controller.request.CategoryEbookRelationRequest;
 import com.axonactive.demo.entity.CategoryEbookRelation;
+import com.axonactive.demo.exception.ResourceNotFoundException;
 import com.axonactive.demo.service.dto.categoryEbookRelationDto.CategoryEbookRelationDto;
 
 import java.util.List;
@@ -12,6 +14,10 @@ public interface CategoryEbookRelationService {
     CategoryEbookRelation save(CategoryEbookRelation categoryEbookRelation);
 
     void deleteById(Integer id);
+
+    CategoryEbookRelation update(CategoryEbookRelation categoryEbookRelation, CategoryEbookRelationRequest categoryEbookRelationRequest) throws ResourceNotFoundException;
+
+    CategoryEbookRelation create(CategoryEbookRelationRequest categoryEbookRelationRequest)throws ResourceNotFoundException;
 
     List<CategoryEbookRelationDto> findEbookRatingGreaterThan(double ratingPoints);
 

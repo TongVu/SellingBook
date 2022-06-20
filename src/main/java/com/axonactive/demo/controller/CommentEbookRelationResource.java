@@ -1,15 +1,13 @@
 package com.axonactive.demo.controller;
 
+import com.axonactive.demo.controller.request.CommentEbookRelationRequest;
+import com.axonactive.demo.entity.CommentEbookRelation;
 import com.axonactive.demo.exception.ResourceNotFoundException;
 import com.axonactive.demo.service.CommentEbookRelationService;
 import com.axonactive.demo.service.CommentService;
 import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.dto.commentEbookRelationDto.CommentEbookRelationDto;
 import com.axonactive.demo.service.mapper.CommentEbookRelationMapper;
-import com.axonactive.demo.controller.request.CommentEbookRelationRequest;
-import com.axonactive.demo.entity.Comment;
-import com.axonactive.demo.entity.CommentEbookRelation;
-import com.axonactive.demo.entity.Ebook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,32 +52,15 @@ public class CommentEbookRelationResource {
         CommentEbookRelation commentEbookRelation = commentEbookRelationService.findCommentEbookRelationById(id)
                 .orElseThrow(() -> new ResourceAccessException("Not found " + id));
 
-        Comment requestedComment = commentService.findCommentById(commentEbookRelationRequest.getCommentId())
-                .orElseThrow(() -> new ResourceNotFoundException("Comment not found " + commentEbookRelationRequest.getCommentId()));
-
-        Ebook requetedEbook = ebookService.findEbookById(commentEbookRelationRequest.getEbookId())
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found" + commentEbookRelationRequest.getEbookId()));
-
-        commentEbookRelation.setComment(requestedComment);
-        commentEbookRelation.setEbook(requetedEbook);
 
         return ResponseEntity
-                .ok(commentEbookRelationMapper.toDto(commentEbookRelationService.save(commentEbookRelation)));
+                .ok(commentEbookRelationMapper.toDto(commentEbookRelationService.update(commentEbookRelation, commentEbookRelationRequest)));
     }
 
     @PostMapping
     public ResponseEntity<CommentEbookRelationDto> create(@RequestBody CommentEbookRelationRequest commentEbookRelationRequest) throws ResourceNotFoundException {
-        Comment comment = commentService.findCommentById(commentEbookRelationRequest.getCommentId())
-                .orElseThrow(() -> new ResourceAccessException("Comment not found " + commentEbookRelationRequest.getCommentId()));
 
-        Ebook ebook = ebookService.findEbookById(commentEbookRelationRequest.getEbookId())
-                .orElseThrow(() -> new ResourceAccessException("Ebook not found " + commentEbookRelationRequest.getEbookId()));
-
-        CommentEbookRelation createdCommentEbookRelation = new CommentEbookRelation();
-        createdCommentEbookRelation.setComment(comment);
-        createdCommentEbookRelation.setEbook(ebook);
-
-        commentEbookRelationService.save(createdCommentEbookRelation);
+        CommentEbookRelation createdCommentEbookRelation = commentEbookRelationService.create(commentEbookRelationRequest);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdCommentEbookRelation.getId()))
