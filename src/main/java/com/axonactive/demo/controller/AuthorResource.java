@@ -1,9 +1,9 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.AuthorRequest;
-import com.axonactive.demo.service.AuthorService;
 import com.axonactive.demo.entity.Author;
-import com.axonactive.demo.exception.ResourceNotFoundException;
+import com.axonactive.demo.exception.BusinessLogicException;
+import com.axonactive.demo.service.AuthorService;
 import com.axonactive.demo.service.dto.authorDto.AuthorDto;
 import com.axonactive.demo.service.mapper.AuthorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +30,18 @@ public class AuthorResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AuthorDto> getAuthorById(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<AuthorDto> getAuthorById(@PathVariable("id") Integer id) {
         Author author = authorService.findAuthorById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                .orElseThrow(BusinessLogicException::authorNotFound);
 
         return ResponseEntity.ok(authorMapper.toDto(author));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AuthorDto> updateAuthor(@PathVariable("id") Integer id,
-                                                  @RequestBody AuthorRequest author) throws ResourceNotFoundException {
+                                                  @RequestBody AuthorRequest author) {
         Author updatedAuthor = authorService.findAuthorById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                .orElseThrow(BusinessLogicException::authorNotFound);
 
         updatedAuthor.setDob(author.getDob());
         updatedAuthor.setAddress(author.getAddress());
@@ -75,9 +75,9 @@ public class AuthorResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) {
         Author deletedAuthor = authorService.findAuthorById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                .orElseThrow(BusinessLogicException::authorNotFound);
         authorService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

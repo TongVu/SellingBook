@@ -1,9 +1,9 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.AccountRequest;
-import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.entity.Account;
-import com.axonactive.demo.exception.ResourceNotFoundException;
+import com.axonactive.demo.exception.BusinessLogicException;
+import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.dto.accountDto.AccountDto;
 import com.axonactive.demo.service.dto.accountDto.AccountInvocesDto;
 import com.axonactive.demo.service.dto.ebookDto.EbookPurchasedDto;
@@ -36,15 +36,15 @@ public class AccountResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AccountDto> getAccountById(@PathVariable(value = "id") Integer id) throws Exception {
-        Account account = accountService.findAccountById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+    public ResponseEntity<AccountDto> getAccountById(@PathVariable(value = "id") Integer id) {
+        Account account = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
         return ResponseEntity.ok(accountMapper.toDto(account));
     }
 
     @GetMapping("/{id}/purchasedbooks")
     public ResponseEntity<List<EbookPurchasedDto>> getPurcharsedEbooks(@PathVariable("id") Integer id,
-                                                                       @RequestParam(value = "paid") Boolean isPay) throws Exception {
-        Account account = accountService.findAccountById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                                                                       @RequestParam(value = "paid") Boolean isPay) {
+        Account account = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
 
         if (isPay)
             return ResponseEntity.ok(accountService.findPurchasedEbooks(id));
@@ -53,8 +53,8 @@ public class AccountResource {
     }
 
     @GetMapping("/{id}/invoices")
-    public ResponseEntity<List<AccountInvocesDto>> getAllInvoices(@PathVariable("id") Integer id) throws Exception{
-        Account account = accountService.findAccountById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+    public ResponseEntity<List<AccountInvocesDto>> getAllInvoices(@PathVariable("id") Integer id) {
+        Account account = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
 
         return ResponseEntity.ok(accountService.findAllInvoices(id));
     }
@@ -82,8 +82,8 @@ public class AccountResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable("id") Integer id,
-                                                    @RequestBody AccountRequest account) throws ResourceNotFoundException {
-        Account updatedAccount = accountService.findAccountById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                                                    @RequestBody AccountRequest account) {
+        Account updatedAccount = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
 
         accountService.update(updatedAccount, account);
         return ResponseEntity.ok(accountMapper.toDto(
@@ -91,8 +91,8 @@ public class AccountResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) throws ResourceNotFoundException {
-        Account deletedAccount = accountService.findAccountById(id).orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) {
+        Account deletedAccount = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
 
         accountService.deleteById(id);
         return ResponseEntity.noContent().build();

@@ -1,7 +1,7 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.EbookAuthorRelationRequest;
-import com.axonactive.demo.exception.ResourceNotFoundException;
+import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.AuthorService;
 import com.axonactive.demo.service.EbookAuthorRelationService;
 import com.axonactive.demo.service.EbookService;
@@ -37,9 +37,9 @@ public class EbookAuthorRelationResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EbookAuthorRelationDto> getById(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<EbookAuthorRelationDto> getById(@PathVariable("id") Integer id) {
         EbookAuthorRelation ebookAuthorRelation = ebookAuthorRelationService.findEbookAuthorRelationById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                .orElseThrow(BusinessLogicException::ebookAuthorRelationNotFound);
 
         return ResponseEntity.ok(ebookAuthorRelationMapper.toDto(ebookAuthorRelation));
     }
@@ -65,15 +65,15 @@ public class EbookAuthorRelationResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<EbookAuthorRelationDto> update(@PathVariable("id") Integer id,
-                                                         @RequestBody EbookAuthorRelationRequest ebookAuthorRelationRequest) throws ResourceNotFoundException{
+                                                         @RequestBody EbookAuthorRelationRequest ebookAuthorRelationRequest) {
         Ebook requestedEbook = ebookService.findEbookById(ebookAuthorRelationRequest.getEbookId())
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found " + ebookAuthorRelationRequest.getEbookId()));
+                .orElseThrow(BusinessLogicException::ebookNotFound);
 
         Author requestedAuthor = authorService.findAuthorById(ebookAuthorRelationRequest.getAuthorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found " + ebookAuthorRelationRequest.getAuthorId()));
+                .orElseThrow(BusinessLogicException::authorNotFound);
 
         EbookAuthorRelation updatedEbookAuthorRelation = ebookAuthorRelationService.findEbookAuthorRelationById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                .orElseThrow(BusinessLogicException::ebookAuthorRelationNotFound);
 
         updatedEbookAuthorRelation.setEbook(requestedEbook);
         updatedEbookAuthorRelation.setAuthor(requestedAuthor);
@@ -83,12 +83,12 @@ public class EbookAuthorRelationResource {
     }
 
     @PostMapping
-    public ResponseEntity<EbookAuthorRelationDto> create(@RequestBody EbookAuthorRelationRequest ebookAuthorRelationRequest)throws ResourceNotFoundException{
+    public ResponseEntity<EbookAuthorRelationDto> create(@RequestBody EbookAuthorRelationRequest ebookAuthorRelationRequest){
         Ebook requestedEbook = ebookService.findEbookById(ebookAuthorRelationRequest.getEbookId())
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found " +ebookAuthorRelationRequest.getEbookId()));
+                .orElseThrow(BusinessLogicException::ebookNotFound);
 
         Author requestedAuthor = authorService.findAuthorById(ebookAuthorRelationRequest.getAuthorId())
-                .orElseThrow(() -> new ResourceNotFoundException("Author not found " + ebookAuthorRelationRequest.getAuthorId()));
+                .orElseThrow(BusinessLogicException::authorNotFound);
 
         EbookAuthorRelation createdEbookAuthorRelation = new EbookAuthorRelation();
         createdEbookAuthorRelation.setEbook(requestedEbook);
@@ -100,9 +100,9 @@ public class EbookAuthorRelationResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) throws ResourceNotFoundException{
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) {
         EbookAuthorRelation deletedEbookAuthorRelation =  ebookAuthorRelationService.findEbookAuthorRelationById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                .orElseThrow(BusinessLogicException::ebookAuthorRelationNotFound);
         ebookAuthorRelationService.deleteById(id);
 
         return ResponseEntity.noContent().build();

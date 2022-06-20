@@ -1,17 +1,16 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.CommentRequest;
-import com.axonactive.demo.exception.ResourceNotFoundException;
-import com.axonactive.demo.service.AccountService;
-import com.axonactive.demo.service.CommentService;
-import com.axonactive.demo.service.mapper.CommentMapper;
 import com.axonactive.demo.entity.Account;
 import com.axonactive.demo.entity.Comment;
+import com.axonactive.demo.exception.BusinessLogicException;
+import com.axonactive.demo.service.AccountService;
+import com.axonactive.demo.service.CommentService;
 import com.axonactive.demo.service.dto.commentDto.CommentDto;
+import com.axonactive.demo.service.mapper.CommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.ResourceAccessException;
 
 import java.net.URI;
 import java.util.List;
@@ -35,21 +34,21 @@ public class CommentResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommentDto> getById(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<CommentDto> getById(@PathVariable("id") Integer id) {
         Comment comment = commentService.findCommentById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment not found " + id));
+                .orElseThrow(BusinessLogicException::commenNotFound);
 
         return ResponseEntity.ok(commentMapper.toDto(comment));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CommentDto> update(@PathVariable("id") Integer id,
-                                             @RequestBody CommentRequest commentRequest) throws ResourceNotFoundException {
+                                             @RequestBody CommentRequest commentRequest) {
         Account requestedAccount = accountService.findAccountById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found " + commentRequest.getAccountId()));
+                .orElseThrow(BusinessLogicException::accountNotFound);
 
         Comment updatedComment = commentService.findCommentById(id)
-                .orElseThrow(() -> new ResourceAccessException("Comment not found " + id));
+                .orElseThrow(BusinessLogicException::commenNotFound);
 
         updatedComment.setCommentContent(commentRequest.getCommentContent());
         updatedComment.setBookRating(commentRequest.getBookRating());
@@ -62,9 +61,9 @@ public class CommentResource {
     }
 
     @PostMapping
-    public ResponseEntity<CommentDto> create(@RequestBody CommentRequest commentRequest) throws ResourceNotFoundException {
+    public ResponseEntity<CommentDto> create(@RequestBody CommentRequest commentRequest) {
         Account requestedAccount = accountService.findAccountById(commentRequest.getAccountId())
-                .orElseThrow(() -> new ResourceAccessException("Account not found " + commentRequest.getAccountId()));
+                .orElseThrow(BusinessLogicException::accountNotFound);
 
         Comment createdComment = new Comment();
         createdComment.setCommentContent(commentRequest.getCommentContent());
@@ -80,9 +79,9 @@ public class CommentResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         Comment deletedComment = commentService.findCommentById(id)
-                .orElseThrow(() -> new ResourceAccessException("Comment not found " + id));
+                .orElseThrow(BusinessLogicException::commenNotFound);
         commentService.deleteById(id);
 
         return ResponseEntity.noContent().build();

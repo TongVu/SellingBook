@@ -3,9 +3,9 @@ package com.axonactive.demo.service.impl;
 import com.axonactive.demo.controller.request.InvoiceRequest;
 import com.axonactive.demo.entity.Account;
 import com.axonactive.demo.entity.CreditCard;
-import com.axonactive.demo.exception.ResourceNotFoundException;
-import com.axonactive.demo.repository.InvoiceRepository;
 import com.axonactive.demo.entity.Invoice;
+import com.axonactive.demo.exception.BusinessLogicException;
+import com.axonactive.demo.repository.InvoiceRepository;
 import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.CreditCardService;
 import com.axonactive.demo.service.InvoiceService;
@@ -47,12 +47,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice create(InvoiceRequest invoiceRequest) throws ResourceNotFoundException {
+    public Invoice create(InvoiceRequest invoiceRequest) {
         CreditCard requestedCreditCard = creditCardService.findCreditCardById(invoiceRequest.getCreditCardId())
-                .orElseThrow(() -> new ResourceNotFoundException("Credit card not found " + invoiceRequest.getCreditCardId()));
+                .orElseThrow(BusinessLogicException::creditCardNotFound);
 
         Account requestedAccount = accountService.findAccountById(invoiceRequest.getAccountId())
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found " + invoiceRequest.getAccountId()));
+                .orElseThrow(BusinessLogicException::accountNotFound);
 
         if(requestedCreditCard.getAccount().getId() != requestedAccount.getId()) {
             return new Invoice();

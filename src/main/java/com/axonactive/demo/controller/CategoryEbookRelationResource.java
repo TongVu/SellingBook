@@ -1,6 +1,6 @@
 package com.axonactive.demo.controller;
 
-import com.axonactive.demo.exception.ResourceNotFoundException;
+import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.CategoryService;
 import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.dto.categoryEbookRelationDto.CategoryEbookRelationDto;
@@ -37,9 +37,9 @@ public class CategoryEbookRelationResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryEbookRelationDto> getById(@PathVariable(value = "id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<CategoryEbookRelationDto> getById(@PathVariable(value = "id") Integer id) {
         CategoryEbookRelation foundCategoryEbookRelation = categoryEbookRelationService.findCategoryEbookRelationById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                .orElseThrow(BusinessLogicException::categoryEbookRelationNotFound);
 
         return ResponseEntity.ok(categoryEbookRelationMapper.toDto(foundCategoryEbookRelation));
     }
@@ -66,15 +66,15 @@ public class CategoryEbookRelationResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<CategoryEbookRelationDto> update(@PathVariable("id") Integer id,
-                                                           @RequestBody CategoryEbookRelationRequest categoryEbookRelationRequest) throws ResourceNotFoundException {
+                                                           @RequestBody CategoryEbookRelationRequest categoryEbookRelationRequest) {
         Ebook requestedEbook = ebookService.findEbookById(categoryEbookRelationRequest.getEbookId())
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found " + categoryEbookRelationRequest.getEbookId()));
+                .orElseThrow(BusinessLogicException::ebookNotFound);
 
         Category requestedCategory = categoryService.findCategoryById(categoryEbookRelationRequest.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found " + categoryEbookRelationRequest.getCategoryId()));
+                .orElseThrow(BusinessLogicException::categoryNotFound);
 
         CategoryEbookRelation updatedCategoryEbookRelation = categoryEbookRelationService.findCategoryEbookRelationById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                .orElseThrow(BusinessLogicException::categoryEbookRelationNotFound);
 
         updatedCategoryEbookRelation.setCategory(requestedCategory);
         updatedCategoryEbookRelation.setEbook(requestedEbook);
@@ -83,13 +83,13 @@ public class CategoryEbookRelationResource {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryEbookRelationDto> create(@RequestBody CategoryEbookRelationRequest categoryEbookRelationRequest) throws ResourceNotFoundException {
+    public ResponseEntity<CategoryEbookRelationDto> create(@RequestBody CategoryEbookRelationRequest categoryEbookRelationRequest) {
 
         Ebook requestedEbook = ebookService.findEbookById(categoryEbookRelationRequest.getEbookId())
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found " + categoryEbookRelationRequest.getEbookId()));
+                .orElseThrow(BusinessLogicException::ebookNotFound);
 
         Category requestedCategory = categoryService.findCategoryById(categoryEbookRelationRequest.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found " + categoryEbookRelationRequest.getCategoryId()));
+                .orElseThrow(BusinessLogicException::categoryNotFound);
 
         CategoryEbookRelation createdCategoryEbookRelation = new CategoryEbookRelation();
         createdCategoryEbookRelation.setCategory(requestedCategory);
@@ -102,9 +102,9 @@ public class CategoryEbookRelationResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         CategoryEbookRelation deleteCategoryEbookRelation = categoryEbookRelationService.findCategoryEbookRelationById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                .orElseThrow(BusinessLogicException::categoryEbookRelationNotFound);
         categoryEbookRelationService.deleteById(id);
 
         return ResponseEntity.noContent().build();

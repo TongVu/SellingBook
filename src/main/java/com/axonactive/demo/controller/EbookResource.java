@@ -1,7 +1,7 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.EbookRequest;
-import com.axonactive.demo.exception.ResourceNotFoundException;
+import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.entity.Ebook;
 import com.axonactive.demo.entity.Publisher;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.ResourceAccessException;
 
 import java.net.URI;
 import java.util.List;
@@ -38,9 +37,9 @@ public class EbookResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EbookDto> getById(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<EbookDto> getById(@PathVariable("id") Integer id) {
         Ebook foundEbook = ebookService.findEbookById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found" + id));
+                .orElseThrow(BusinessLogicException::ebookNotFound);
 
         return ResponseEntity.ok(ebookMapper.toDto(foundEbook));
     }
@@ -52,12 +51,12 @@ public class EbookResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<EbookDto> update(@PathVariable("id") Integer id,
-                                           @RequestBody EbookRequest ebookRequest) throws ResourceNotFoundException {
+                                           @RequestBody EbookRequest ebookRequest) {
         Publisher requestedPublisher = publisherService.findPublisherById(ebookRequest.getPublisherId())
-                .orElseThrow(() -> new ResourceNotFoundException("Publisher not found " + ebookRequest.getPublisherId()));
+                .orElseThrow(BusinessLogicException::publisherNotFound);
 
         Ebook updatedEbook = ebookService.findEbookById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found " + id));
+                .orElseThrow(BusinessLogicException::ebookAuthorRelationNotFound);
 
         updatedEbook.setPage(ebookRequest.getPage());
         updatedEbook.setTitle(ebookRequest.getTitle());
@@ -71,9 +70,9 @@ public class EbookResource {
     }
 
     @PostMapping
-    public ResponseEntity<EbookDto> create(@RequestBody EbookRequest ebook) throws ResourceNotFoundException {
+    public ResponseEntity<EbookDto> create(@RequestBody EbookRequest ebook) {
         Publisher requestedPublisher = publisherService.findPublisherById(ebook.getPublisherId())
-                .orElseThrow(() -> new ResourceAccessException("Not found publisher " + ebook.getPublisherId()));
+                .orElseThrow(BusinessLogicException::publisherNotFound);
 
         Ebook createdEbook = new Ebook();
         createdEbook.setPage(ebook.getPage());
@@ -91,9 +90,9 @@ public class EbookResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         Ebook deletedEbook = ebookService.findEbookById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found " + id));
+                .orElseThrow(BusinessLogicException::ebookNotFound);
 
         ebookService.deleteById(id);
         return ResponseEntity.noContent().build();

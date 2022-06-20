@@ -1,7 +1,7 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.PublisherRequest;
-import com.axonactive.demo.exception.ResourceNotFoundException;
+import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.entity.Publisher;
 import com.axonactive.demo.service.PublisherService;
 import com.axonactive.demo.service.dto.publisherDto.PublisherDto;
@@ -29,18 +29,18 @@ public class PublisherResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PublisherDto> getById(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<PublisherDto> getById(@PathVariable("id") Integer id) {
         Publisher publisher = publisherService.findPublisherById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                .orElseThrow(BusinessLogicException::publisherNotFound);
 
         return ResponseEntity.ok(publisherMapper.toDto(publisher));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<PublisherDto> update(@PathVariable("id") Integer id,
-                                               @RequestBody PublisherRequest publisherRequest) throws ResourceNotFoundException {
+                                               @RequestBody PublisherRequest publisherRequest) {
         Publisher updatedPublisher = publisherService.findPublisherById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                .orElseThrow(BusinessLogicException::publisherNotFound);
 
         updatedPublisher.setName(publisherRequest.getName());
         updatedPublisher.setPhone(publisherRequest.getPhone());
@@ -67,9 +67,9 @@ public class PublisherResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) {
         Publisher updatedPublisher = publisherService.findPublisherById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+                .orElseThrow(BusinessLogicException::publisherNotFound);
 
         publisherService.deleteById(id);
         return ResponseEntity.noContent().build();

@@ -1,13 +1,13 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.CreditCardRequest;
-import com.axonactive.demo.exception.ResourceNotFoundException;
-import com.axonactive.demo.service.AccountService;
-import com.axonactive.demo.service.mapper.CreditCardMapper;
 import com.axonactive.demo.entity.Account;
 import com.axonactive.demo.entity.CreditCard;
+import com.axonactive.demo.exception.BusinessLogicException;
+import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.CreditCardService;
 import com.axonactive.demo.service.dto.creditCardDto.CreditCardDto;
+import com.axonactive.demo.service.mapper.CreditCardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,20 +35,20 @@ public class CreditCardResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CreditCardDto> getById(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<CreditCardDto> getById(@PathVariable("id") Integer id) {
         CreditCard foundCreditCard = creditCardService.findCreditCardById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Credit card not found " + id));
+                .orElseThrow(BusinessLogicException::creditCardNotFound);
 
         return ResponseEntity.ok(creditCardMapper.toDto(foundCreditCard));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CreditCardDto> update(@PathVariable("id") Integer id,
-                                                @RequestBody CreditCardRequest creditCardRequest) throws ResourceNotFoundException {
+                                                @RequestBody CreditCardRequest creditCardRequest) {
         CreditCard updatedCreditCard = creditCardService.findCreditCardById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Credit card not found " + id));
+                .orElseThrow(BusinessLogicException::creditCardNotFound);
         Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found " + creditCardRequest.getAccountId()));
+                .orElseThrow(BusinessLogicException::authorNotFound);
 
         updatedCreditCard.setAccount(requestedAccount);
         updatedCreditCard.setCardNumber(creditCardRequest.getCardNumber());
@@ -59,9 +59,9 @@ public class CreditCardResource {
     }
 
     @PostMapping
-    public ResponseEntity<CreditCardDto> create(@RequestBody CreditCardRequest creditCardRequest) throws ResourceNotFoundException {
+    public ResponseEntity<CreditCardDto> create(@RequestBody CreditCardRequest creditCardRequest) {
         Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
-                .orElseThrow(() -> new ResourceNotFoundException("Not found " + creditCardRequest.getAccountId()));
+                .orElseThrow(BusinessLogicException::accountNotFound);
 
         CreditCard createdCreditCard = new CreditCard();
         createdCreditCard.setAccount(requestedAccount);
@@ -77,9 +77,9 @@ public class CreditCardResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         CreditCard deletedCreditCard = creditCardService.findCreditCardById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Credit card not found " + id));
+                .orElseThrow(BusinessLogicException::creditCardNotFound);
         creditCardService.deleteById(id);
 
         return ResponseEntity.noContent().build();

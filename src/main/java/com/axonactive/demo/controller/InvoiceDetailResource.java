@@ -1,16 +1,15 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.InvoiceDetailRequest;
-import com.axonactive.demo.service.EbookService;
-import com.axonactive.demo.service.InvoiceDetailService;
 import com.axonactive.demo.entity.Ebook;
 import com.axonactive.demo.entity.Invoice;
 import com.axonactive.demo.entity.InvoiceDetail;
-import com.axonactive.demo.exception.ResourceNotFoundException;
+import com.axonactive.demo.exception.BusinessLogicException;
+import com.axonactive.demo.service.EbookService;
+import com.axonactive.demo.service.InvoiceDetailService;
 import com.axonactive.demo.service.InvoiceService;
 import com.axonactive.demo.service.dto.invoiceDetailDto.InvoiceDetailDto;
 import com.axonactive.demo.service.mapper.InvoiceDetailMapper;
-import org.hibernate.ResourceClosedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,24 +40,24 @@ public class InvoiceDetailResource {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InvoiceDetailDto> getById(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<InvoiceDetailDto> getById(@PathVariable("id") Integer id) {
         InvoiceDetail foundInvoiceDetail = invoiceDetailService.findInvoiceDetailById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found " + id));
+                .orElseThrow(BusinessLogicException::invoiceDetailNotFound);
 
         return ResponseEntity.ok(invoiceDetailMapper.toDto(foundInvoiceDetail));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDetailDto> update(@PathVariable("id") Integer id,
-                                                   @RequestBody InvoiceDetailRequest invoiceDetailRequest) throws ResourceNotFoundException {
+                                                   @RequestBody InvoiceDetailRequest invoiceDetailRequest) {
         Invoice requestedInvoice = invoiceService.findInvoiceById(invoiceDetailRequest.getInvoiceId())
-                .orElseThrow(() -> new ResourceClosedException("Invoice not found " + invoiceDetailRequest.getInvoiceId()));
+                .orElseThrow(BusinessLogicException::invoiceNotFound);
 
         Ebook requestedEbook = ebookService.findEbookById(invoiceDetailRequest.getEbookId())
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found " + invoiceDetailRequest.getEbookId()));
+                .orElseThrow(BusinessLogicException::ebookNotFound);
 
         InvoiceDetail updatedInvoiceDetail = invoiceDetailService.findInvoiceDetailById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Invoice detail not found " + id));
+                .orElseThrow(BusinessLogicException::invoiceDetailNotFound);
 
         updatedInvoiceDetail.setDateAdded(invoiceDetailRequest.getDateAdded());
         updatedInvoiceDetail.setEbookPrice(invoiceDetailRequest.getEbookPrice());
@@ -70,12 +69,12 @@ public class InvoiceDetailResource {
     }
 
     @PostMapping
-    public ResponseEntity<InvoiceDetailDto> create(@RequestBody InvoiceDetailRequest invoiceDetail) throws ResourceNotFoundException {
+    public ResponseEntity<InvoiceDetailDto> create(@RequestBody InvoiceDetailRequest invoiceDetail) {
         Invoice requestedInvoice = invoiceService.findInvoiceById(invoiceDetail.getInvoiceId())
-                .orElseThrow(() -> new ResourceNotFoundException("Invoice not found " + invoiceDetail.getInvoiceId()));
+                .orElseThrow(BusinessLogicException::invoiceNotFound);
 
         Ebook requestedEbook = ebookService.findEbookById(invoiceDetail.getEbookId())
-                .orElseThrow(() -> new ResourceNotFoundException("Ebook not found" + invoiceDetail.getEbookId()));
+                .orElseThrow(BusinessLogicException::ebookNotFound);
 
         InvoiceDetail createdInvoiceDetail = new InvoiceDetail();
         createdInvoiceDetail.setDateAdded(invoiceDetail.getDateAdded());
@@ -91,9 +90,9 @@ public class InvoiceDetailResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         InvoiceDetail deletedInvoiceDetail = invoiceDetailService.findInvoiceDetailById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Invoice detail not found " + id));
+                .orElseThrow(BusinessLogicException::invoiceDetailNotFound);
         invoiceDetailService.deleteById(id);
 
         return ResponseEntity.noContent().build();

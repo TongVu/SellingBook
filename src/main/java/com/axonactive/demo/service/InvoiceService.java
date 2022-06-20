@@ -2,7 +2,6 @@ package com.axonactive.demo.service;
 
 import com.axonactive.demo.controller.request.InvoiceRequest;
 import com.axonactive.demo.entity.Invoice;
-import com.axonactive.demo.exception.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +15,6 @@ public interface InvoiceService {
 
     Optional<Invoice> findInvoiceById(Integer id);
 
-    Invoice create(InvoiceRequest invoiceRequest) throws ResourceNotFoundException;
+    Invoice create(InvoiceRequest invoiceRequest);
 
 }
