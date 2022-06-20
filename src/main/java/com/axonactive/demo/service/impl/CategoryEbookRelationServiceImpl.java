@@ -1,9 +1,15 @@
 package com.axonactive.demo.service.impl;
 
-import com.axonactive.demo.repository.CategoryEbookRelationRepository;
-import com.axonactive.demo.service.dto.categoryEbookRelationDto.CategoryEbookRelationDto;
+import com.axonactive.demo.controller.request.CategoryEbookRelationRequest;
+import com.axonactive.demo.entity.Category;
 import com.axonactive.demo.entity.CategoryEbookRelation;
+import com.axonactive.demo.entity.Ebook;
+import com.axonactive.demo.exception.BusinessLogicException;
+import com.axonactive.demo.repository.CategoryEbookRelationRepository;
 import com.axonactive.demo.service.CategoryEbookRelationService;
+import com.axonactive.demo.service.CategoryService;
+import com.axonactive.demo.service.EbookService;
+import com.axonactive.demo.service.dto.categoryEbookRelationDto.CategoryEbookRelationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +21,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CategoryEbookRelationServiceImpl implements CategoryEbookRelationService {
     @Autowired
-    private final CategoryEbookRelationRepository categoryEbookRelationRepository;
+    private CategoryEbookRelationRepository categoryEbookRelationRepository;
+
+    @Autowired
+    private EbookService ebookService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public List<CategoryEbookRelation> getAll() {
@@ -29,7 +41,38 @@ public class CategoryEbookRelationServiceImpl implements CategoryEbookRelationSe
 
     @Override
     public void deleteById(Integer id) {
+        CategoryEbookRelation deleteCategoryEbookRelation = categoryEbookRelationRepository.findById(id)
+                .orElseThrow(BusinessLogicException::categoryEbookRelationNotFound);
+
         categoryEbookRelationRepository.deleteById(id);
+    }
+
+    @Override
+    public CategoryEbookRelation update(CategoryEbookRelation updatedCategoryEbookRelation, CategoryEbookRelationRequest categoryEbookRelationRequest) {
+        Ebook requestedEbook = ebookService.findEbookById(categoryEbookRelationRequest.getEbookId())
+                .orElseThrow(BusinessLogicException::ebookNotFound);
+
+        Category requestedCategory = categoryService.findCategoryById(categoryEbookRelationRequest.getCategoryId())
+                .orElseThrow(BusinessLogicException::categoryNotFound);
+
+        updatedCategoryEbookRelation.setCategory(requestedCategory);
+        updatedCategoryEbookRelation.setEbook(requestedEbook);
+
+        return categoryEbookRelationRepository.save(updatedCategoryEbookRelation);
+    }
+
+    @Override
+    public CategoryEbookRelation create(CategoryEbookRelationRequest categoryEbookRelationRequest) {
+        Ebook requestedEbook = ebookService.findEbookById(categoryEbookRelationRequest.getEbookId())
+                .orElseThrow(BusinessLogicException::ebookNotFound);
+
+        Category requestedCategory = categoryService.findCategoryById(categoryEbookRelationRequest.getCategoryId())
+                .orElseThrow(BusinessLogicException::categoryNotFound);
+
+        CategoryEbookRelation createdCategoryEbookRelation = new CategoryEbookRelation();
+        createdCategoryEbookRelation.setCategory(requestedCategory);
+        createdCategoryEbookRelation.setEbook(requestedEbook);
+        return categoryEbookRelationRepository.save(createdCategoryEbookRelation);
     }
 
     @Override

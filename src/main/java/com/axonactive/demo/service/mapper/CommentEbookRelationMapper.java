@@ -11,14 +11,14 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CommentEbookRelationMapper {
     CommentEbookRelationMapper INSTANCE = Mappers.getMapper(CommentEbookRelationMapper.class);
+
     @Mapping(source = "comment.commentContent", target = "commentContent")
     @Mapping(source = "comment.date", target = "date")
     @Mapping(target = "accountName",
             expression = "java(commentEbookRelation.getComment().getAccount().getFirstName() + \" \"  + commentEbookRelation.getComment().getAccount().getLastName())")
     @Mapping(source = "ebook.title", target = "ebookTitle")
-
-
     CommentEbookRelationDto toDto(CommentEbookRelation commentEbookRelation);
+
     List<CommentEbookRelationDto> toDtos(List<CommentEbookRelation> commentEbookRelationList);
 
 

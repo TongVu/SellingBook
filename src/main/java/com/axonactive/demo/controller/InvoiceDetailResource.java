@@ -1,13 +1,9 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.InvoiceDetailRequest;
-import com.axonactive.demo.entity.Ebook;
-import com.axonactive.demo.entity.Invoice;
 import com.axonactive.demo.entity.InvoiceDetail;
 import com.axonactive.demo.exception.BusinessLogicException;
-import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.InvoiceDetailService;
-import com.axonactive.demo.service.InvoiceService;
 import com.axonactive.demo.service.dto.invoiceDetailDto.InvoiceDetailDto;
 import com.axonactive.demo.service.mapper.InvoiceDetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +24,6 @@ public class InvoiceDetailResource {
     @Autowired
     InvoiceDetailService invoiceDetailService;
 
-    @Autowired
-    InvoiceService invoiceService;
-
-    @Autowired
-    EbookService ebookService;
-
     @GetMapping
     public ResponseEntity<List<InvoiceDetailDto>> getAll() {
         return ResponseEntity.ok(invoiceDetailMapper.toDtos(invoiceDetailService.getAll()));
@@ -50,39 +40,16 @@ public class InvoiceDetailResource {
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDetailDto> update(@PathVariable("id") Integer id,
                                                    @RequestBody InvoiceDetailRequest invoiceDetailRequest) {
-        Invoice requestedInvoice = invoiceService.findInvoiceById(invoiceDetailRequest.getInvoiceId())
-                .orElseThrow(BusinessLogicException::invoiceNotFound);
-
-        Ebook requestedEbook = ebookService.findEbookById(invoiceDetailRequest.getEbookId())
-                .orElseThrow(BusinessLogicException::ebookNotFound);
-
         InvoiceDetail updatedInvoiceDetail = invoiceDetailService.findInvoiceDetailById(id)
                 .orElseThrow(BusinessLogicException::invoiceDetailNotFound);
 
-        updatedInvoiceDetail.setDateAdded(invoiceDetailRequest.getDateAdded());
-        updatedInvoiceDetail.setEbookPrice(invoiceDetailRequest.getEbookPrice());
-        updatedInvoiceDetail.setInvoice(requestedInvoice);
-        updatedInvoiceDetail.setEbook(requestedEbook);
-
         return ResponseEntity
-                .ok(invoiceDetailMapper.toDto(invoiceDetailService.save(updatedInvoiceDetail)));
+                .ok(invoiceDetailMapper.toDto(invoiceDetailService.update(updatedInvoiceDetail, invoiceDetailRequest)));
     }
 
     @PostMapping
     public ResponseEntity<InvoiceDetailDto> create(@RequestBody InvoiceDetailRequest invoiceDetail) {
-        Invoice requestedInvoice = invoiceService.findInvoiceById(invoiceDetail.getInvoiceId())
-                .orElseThrow(BusinessLogicException::invoiceNotFound);
-
-        Ebook requestedEbook = ebookService.findEbookById(invoiceDetail.getEbookId())
-                .orElseThrow(BusinessLogicException::ebookNotFound);
-
-        InvoiceDetail createdInvoiceDetail = new InvoiceDetail();
-        createdInvoiceDetail.setDateAdded(invoiceDetail.getDateAdded());
-        createdInvoiceDetail.setEbookPrice(invoiceDetail.getEbookPrice());
-        createdInvoiceDetail.setInvoice(requestedInvoice);
-        createdInvoiceDetail.setEbook(requestedEbook);
-
-        invoiceDetailService.save(createdInvoiceDetail);
+        InvoiceDetail createdInvoiceDetail = invoiceDetailService.create(invoiceDetail);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdInvoiceDetail.getId()))

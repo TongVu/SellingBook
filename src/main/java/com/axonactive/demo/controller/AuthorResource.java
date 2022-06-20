@@ -43,31 +43,14 @@ public class AuthorResource {
         Author updatedAuthor = authorService.findAuthorById(id)
                 .orElseThrow(BusinessLogicException::authorNotFound);
 
-        updatedAuthor.setDob(author.getDob());
-        updatedAuthor.setAddress(author.getAddress());
-        updatedAuthor.setGender(author.getGender());
-        updatedAuthor.setFirstName(author.getFirstName());
-        updatedAuthor.setLastName(author.getLastName());
-        updatedAuthor.setEmail(author.getEmail());
-        updatedAuthor.setPhone(author.getPhone());
-        updatedAuthor.setNationality(author.getNationality());
+        authorService.update(updatedAuthor, author);
 
         return ResponseEntity.ok(authorMapper.toDto(authorService.save(updatedAuthor)));
     }
 
     @PostMapping
     public ResponseEntity<AuthorDto> createAuthor(@RequestBody AuthorRequest author) {
-        Author createdAuthor = new Author();
-        createdAuthor.setDob(author.getDob());
-        createdAuthor.setAddress(author.getAddress());
-        createdAuthor.setGender(author.getGender());
-        createdAuthor.setFirstName(author.getFirstName());
-        createdAuthor.setLastName(author.getLastName());
-        createdAuthor.setEmail(author.getEmail());
-        createdAuthor.setPhone(author.getPhone());
-        createdAuthor.setNationality(author.getNationality());
-
-        authorService.save(createdAuthor);
+        Author createdAuthor = authorService.create(author);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdAuthor.getId()))

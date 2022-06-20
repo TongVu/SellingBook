@@ -19,7 +19,7 @@ public interface InvoiceDetailMapper {
     @Mapping(target = "invoiceAccountFullName",
             expression = "java(invoiceDetail.getInvoice().getAccount().getFirstName() + \" \" + invoiceDetail.getInvoice().getAccount().getLastName())")
     @Mapping(source = "ebook.title", target = "ebookTitle")
-
     InvoiceDetailDto toDto(InvoiceDetail invoiceDetail);
+
     List<InvoiceDetailDto> toDtos(List<InvoiceDetail> invoiceDetails);
 }

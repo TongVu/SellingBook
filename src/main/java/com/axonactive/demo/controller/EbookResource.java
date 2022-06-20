@@ -1,10 +1,9 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.EbookRequest;
+import com.axonactive.demo.entity.Ebook;
 import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.EbookService;
-import com.axonactive.demo.entity.Ebook;
-import com.axonactive.demo.entity.Publisher;
 import com.axonactive.demo.service.PublisherService;
 import com.axonactive.demo.service.dto.ebookDto.EbookDto;
 import com.axonactive.demo.service.dto.ebookDto.EbookInfoCategoryAuthorDto;
@@ -28,9 +27,6 @@ public class EbookResource {
     @Autowired
     EbookService ebookService;
 
-    @Autowired
-    PublisherService publisherService;
-
     @GetMapping
     public ResponseEntity<List<EbookDto>> getAll() {
         return ResponseEntity.ok(ebookMapper.toDtos(ebookService.getAll()));
@@ -45,44 +41,22 @@ public class EbookResource {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<List<EbookInfoCategoryAuthorDto>> getEbookByPage(@Param("pages") Integer pages){
+    public ResponseEntity<List<EbookInfoCategoryAuthorDto>> getEbookByPage(@Param("pages") Integer pages) {
         return ResponseEntity.ok(ebookService.findEbookByPagesGreaterThan(pages));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<EbookDto> update(@PathVariable("id") Integer id,
                                            @RequestBody EbookRequest ebookRequest) {
-        Publisher requestedPublisher = publisherService.findPublisherById(ebookRequest.getPublisherId())
-                .orElseThrow(BusinessLogicException::publisherNotFound);
-
         Ebook updatedEbook = ebookService.findEbookById(id)
                 .orElseThrow(BusinessLogicException::ebookAuthorRelationNotFound);
 
-        updatedEbook.setPage(ebookRequest.getPage());
-        updatedEbook.setTitle(ebookRequest.getTitle());
-        updatedEbook.setRating(ebookRequest.getRating());
-        updatedEbook.setIntroduction(ebookRequest.getIntroduction());
-        updatedEbook.setPurchased(ebookRequest.getPurchased());
-        updatedEbook.setViewLinkStatus(ebookRequest.getViewLinkStatus());
-        updatedEbook.setPublisher(requestedPublisher);
-
-        return ResponseEntity.ok(ebookMapper.toDto(ebookService.save(updatedEbook)));
+        return ResponseEntity.ok(ebookMapper.toDto(ebookService.update(updatedEbook, ebookRequest)));
     }
 
     @PostMapping
     public ResponseEntity<EbookDto> create(@RequestBody EbookRequest ebook) {
-        Publisher requestedPublisher = publisherService.findPublisherById(ebook.getPublisherId())
-                .orElseThrow(BusinessLogicException::publisherNotFound);
-
-        Ebook createdEbook = new Ebook();
-        createdEbook.setPage(ebook.getPage());
-        createdEbook.setTitle(ebook.getTitle());
-        createdEbook.setRating(ebook.getRating());
-        createdEbook.setIntroduction(ebook.getIntroduction());
-        createdEbook.setPurchased(ebook.getPurchased());
-        createdEbook.setViewLinkStatus(ebook.getViewLinkStatus());
-        createdEbook.setPublisher(requestedPublisher);
-        ebookService.save(createdEbook);
+        Ebook createdEbook = ebookService.create(ebook);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdEbook.getId()))

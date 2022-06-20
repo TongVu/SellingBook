@@ -1,10 +1,8 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.CommentRequest;
-import com.axonactive.demo.entity.Account;
 import com.axonactive.demo.entity.Comment;
 import com.axonactive.demo.exception.BusinessLogicException;
-import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.CommentService;
 import com.axonactive.demo.service.dto.commentDto.CommentDto;
 import com.axonactive.demo.service.mapper.CommentMapper;
@@ -25,8 +23,6 @@ public class CommentResource {
 
     @Autowired
     CommentService commentService;
-    @Autowired
-    AccountService accountService;
 
     @GetMapping
     public ResponseEntity<List<CommentDto>> getAll() {
@@ -44,35 +40,15 @@ public class CommentResource {
     @PutMapping("/{id}")
     public ResponseEntity<CommentDto> update(@PathVariable("id") Integer id,
                                              @RequestBody CommentRequest commentRequest) {
-        Account requestedAccount = accountService.findAccountById(id)
-                .orElseThrow(BusinessLogicException::accountNotFound);
-
         Comment updatedComment = commentService.findCommentById(id)
                 .orElseThrow(BusinessLogicException::commenNotFound);
 
-        updatedComment.setCommentContent(commentRequest.getCommentContent());
-        updatedComment.setBookRating(commentRequest.getBookRating());
-        updatedComment.setCommentUpvote(commentRequest.getCommentUpvote());
-        updatedComment.setDate(commentRequest.getDate());
-        updatedComment.setAccount(requestedAccount);
-        commentService.save(updatedComment);
-
-        return ResponseEntity.ok(commentMapper.toDto(commentService.save(updatedComment)));
+        return ResponseEntity.ok(commentMapper.toDto(commentService.update(updatedComment, commentRequest)));
     }
 
     @PostMapping
     public ResponseEntity<CommentDto> create(@RequestBody CommentRequest commentRequest) {
-        Account requestedAccount = accountService.findAccountById(commentRequest.getAccountId())
-                .orElseThrow(BusinessLogicException::accountNotFound);
-
-        Comment createdComment = new Comment();
-        createdComment.setCommentContent(commentRequest.getCommentContent());
-        createdComment.setBookRating(commentRequest.getBookRating());
-        createdComment.setCommentUpvote(commentRequest.getCommentUpvote());
-        createdComment.setDate(commentRequest.getDate());
-        createdComment.setAccount(requestedAccount);
-
-        commentService.save(createdComment);
+        Comment createdComment = commentService.create(commentRequest);
 
         return ResponseEntity.created(URI.create(
                 (PATH + "/" + createdComment.getId()))).body(commentMapper.toDto(createdComment));

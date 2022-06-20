@@ -1,7 +1,6 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.CreditCardRequest;
-import com.axonactive.demo.entity.Account;
 import com.axonactive.demo.entity.CreditCard;
 import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.AccountService;
@@ -47,29 +46,13 @@ public class CreditCardResource {
                                                 @RequestBody CreditCardRequest creditCardRequest) {
         CreditCard updatedCreditCard = creditCardService.findCreditCardById(id)
                 .orElseThrow(BusinessLogicException::creditCardNotFound);
-        Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
-                .orElseThrow(BusinessLogicException::authorNotFound);
 
-        updatedCreditCard.setAccount(requestedAccount);
-        updatedCreditCard.setCardNumber(creditCardRequest.getCardNumber());
-        updatedCreditCard.setExpiredDate(creditCardRequest.getExpiredDate());
-        updatedCreditCard.setBalance(creditCardRequest.getBalance());
-
-        return ResponseEntity.ok(creditCardMapper.toDto(creditCardService.save(updatedCreditCard)));
+        return ResponseEntity.ok(creditCardMapper.toDto(creditCardService.update(updatedCreditCard, creditCardRequest)));
     }
 
     @PostMapping
     public ResponseEntity<CreditCardDto> create(@RequestBody CreditCardRequest creditCardRequest) {
-        Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
-                .orElseThrow(BusinessLogicException::accountNotFound);
-
-        CreditCard createdCreditCard = new CreditCard();
-        createdCreditCard.setAccount(requestedAccount);
-        createdCreditCard.setCardNumber(creditCardRequest.getCardNumber());
-        createdCreditCard.setExpiredDate(creditCardRequest.getExpiredDate());
-        createdCreditCard.setBalance(creditCardRequest.getBalance());
-
-        creditCardService.save(createdCreditCard);
+        CreditCard createdCreditCard = creditCardService.create(creditCardRequest);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdCreditCard.getId()))

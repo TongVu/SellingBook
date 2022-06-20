@@ -13,7 +13,7 @@ public interface CommentMapper {
     CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
     @Mapping(target = "accountFullName", expression = "java(comment.getAccount().getFirstName() + \" \" + comment.getAccount().getLastName())")
-
     CommentDto toDto(Comment comment);
+
     List<CommentDto> toDtos(List<Comment> comments);
 }

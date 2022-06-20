@@ -12,5 +12,6 @@ public interface PublisherMapper {
     PublisherMapper INSTANCE = Mappers.getMapper(PublisherMapper.class);
 
     PublisherDto toDto(Publisher publisher);
+
     List<PublisherDto> toDtos(List<Publisher> publisherList);
 }

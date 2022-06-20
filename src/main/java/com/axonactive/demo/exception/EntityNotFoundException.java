@@ -1,6 +1,6 @@
 package com.axonactive.demo.exception;
 
-public class EntityNotFoundException extends Exception{
+public class EntityNotFoundException extends Exception {
     private final String errorKey;
 
     public EntityNotFoundException(String errorKey) {

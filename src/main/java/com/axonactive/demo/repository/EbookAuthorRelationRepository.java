@@ -2,7 +2,6 @@ package com.axonactive.demo.repository;
 
 import com.axonactive.demo.entity.EbookAuthorRelation;
 import com.axonactive.demo.service.dto.ebookAuthorRelationDto.EbookAuthorRelationDto;
-import com.axonactive.demo.service.dto.ebookDto.EbookInfoCategoryAuthorDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -12,5 +12,6 @@ public interface CategoryMapper {
     CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
     CategoryDto toDto(Category category);
+
     List<CategoryDto> toDtos(List<Category> category);
 }

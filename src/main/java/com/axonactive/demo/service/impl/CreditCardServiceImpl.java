@@ -1,7 +1,11 @@
 package com.axonactive.demo.service.impl;
 
-import com.axonactive.demo.repository.CreditCardRepository;
+import com.axonactive.demo.controller.request.CreditCardRequest;
+import com.axonactive.demo.entity.Account;
 import com.axonactive.demo.entity.CreditCard;
+import com.axonactive.demo.exception.BusinessLogicException;
+import com.axonactive.demo.repository.CreditCardRepository;
+import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.CreditCardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +18,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CreditCardServiceImpl implements CreditCardService {
     @Autowired
-    private final CreditCardRepository creditCardRepository;
+    private CreditCardRepository creditCardRepository;
+
+    @Autowired
+    private AccountService accountService;
 
     @Override
     public List<CreditCard> getAll() {
@@ -25,6 +32,33 @@ public class CreditCardServiceImpl implements CreditCardService {
     public CreditCard save(CreditCard creditCard) {
         return creditCardRepository.save(creditCard);
 
+    }
+
+    @Override
+    public CreditCard update(CreditCard updatedCreditCard, CreditCardRequest creditCardRequest) {
+        Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
+                .orElseThrow(BusinessLogicException::authorNotFound);
+
+        updatedCreditCard.setAccount(requestedAccount);
+        updatedCreditCard.setCardNumber(creditCardRequest.getCardNumber());
+        updatedCreditCard.setExpiredDate(creditCardRequest.getExpiredDate());
+        updatedCreditCard.setBalance(creditCardRequest.getBalance());
+
+        return creditCardRepository.save(updatedCreditCard);
+    }
+
+    @Override
+    public CreditCard create(CreditCardRequest creditCardRequest) {
+        Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
+                .orElseThrow(BusinessLogicException::accountNotFound);
+
+        CreditCard createdCreditCard = new CreditCard();
+        createdCreditCard.setAccount(requestedAccount);
+        createdCreditCard.setCardNumber(creditCardRequest.getCardNumber());
+        createdCreditCard.setExpiredDate(creditCardRequest.getExpiredDate());
+        createdCreditCard.setBalance(creditCardRequest.getBalance());
+
+        return creditCardRepository.save(createdCreditCard);
     }
 
     @Override

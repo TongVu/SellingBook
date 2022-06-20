@@ -19,9 +19,8 @@ public interface EbookAuthorRelationMapper {
     @Mapping(target = "authorFullName", expression = "java(ebookAuthorRelation.getAuthor().getFirstName() + \" \" + ebookAuthorRelation.getAuthor().getLastName())")
     @Mapping(source = "author.email", target = "authorEmail")
     @Mapping(source = "author.gender", target = "authorGender")
-
-
     EbookAuthorRelationDto toDto(EbookAuthorRelation ebookAuthorRelation);
+
     List<EbookAuthorRelationDto> toDtos(List<EbookAuthorRelation> ebookAuthorRelations);
 
 //    @AfterMapping

@@ -22,6 +22,7 @@ public class AccountResource {
 
     @Autowired
     AccountService accountService;
+
     @Autowired
     AccountMapper accountMapper;
 
@@ -38,6 +39,7 @@ public class AccountResource {
     @GetMapping("/{id}")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable(value = "id") Integer id) {
         Account account = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
+
         return ResponseEntity.ok(accountMapper.toDto(account));
     }
 
@@ -61,7 +63,7 @@ public class AccountResource {
 
     @GetMapping("/find")
     public ResponseEntity<?> getAccountByEmailLikeOrByPhone(@RequestParam(value = "phone", defaultValue = "empty", required = false) String phone,
-                                                                     @RequestParam(value = "email", defaultValue = "empty", required = false) String email) {
+                                                            @RequestParam(value = "email", defaultValue = "empty", required = false) String email) {
         if (!phone.equalsIgnoreCase("empty"))
             return ResponseEntity.ok(accountMapper.toDto(accountService.findAccountByPhone(phone).get()));
 

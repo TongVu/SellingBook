@@ -1,13 +1,9 @@
 package com.axonactive.demo.controller;
 
 import com.axonactive.demo.controller.request.CommentEbookRelationRequest;
-import com.axonactive.demo.entity.Comment;
 import com.axonactive.demo.entity.CommentEbookRelation;
-import com.axonactive.demo.entity.Ebook;
 import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.CommentEbookRelationService;
-import com.axonactive.demo.service.CommentService;
-import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.dto.commentEbookRelationDto.CommentEbookRelationDto;
 import com.axonactive.demo.service.mapper.CommentEbookRelationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +24,6 @@ public class CommentEbookRelationResource {
     @Autowired
     CommentEbookRelationService commentEbookRelationService;
 
-    @Autowired
-    EbookService ebookService;
-
-    @Autowired
-    CommentService commentService;
-
     @GetMapping
     public ResponseEntity<List<CommentEbookRelationDto>> getAll() {
         return ResponseEntity.ok(commentEbookRelationMapper.toDtos(commentEbookRelationService.getAll()));
@@ -53,32 +43,13 @@ public class CommentEbookRelationResource {
         CommentEbookRelation commentEbookRelation = commentEbookRelationService.findCommentEbookRelationById(id)
                 .orElseThrow(BusinessLogicException::commenEbookRelationNotFound);
 
-        Comment requestedComment = commentService.findCommentById(commentEbookRelationRequest.getCommentId())
-                .orElseThrow(BusinessLogicException::commenNotFound);
-
-        Ebook requetedEbook = ebookService.findEbookById(commentEbookRelationRequest.getEbookId())
-                .orElseThrow(BusinessLogicException::ebookNotFound);
-
-        commentEbookRelation.setComment(requestedComment);
-        commentEbookRelation.setEbook(requetedEbook);
-
         return ResponseEntity
-                .ok(commentEbookRelationMapper.toDto(commentEbookRelationService.save(commentEbookRelation)));
+                .ok(commentEbookRelationMapper.toDto(commentEbookRelationService.update(commentEbookRelation, commentEbookRelationRequest)));
     }
 
     @PostMapping
     public ResponseEntity<CommentEbookRelationDto> create(@RequestBody CommentEbookRelationRequest commentEbookRelationRequest) {
-        Comment comment = commentService.findCommentById(commentEbookRelationRequest.getCommentId())
-                .orElseThrow(BusinessLogicException::commenNotFound);
-
-        Ebook ebook = ebookService.findEbookById(commentEbookRelationRequest.getEbookId())
-                .orElseThrow(BusinessLogicException::ebookNotFound);
-
-        CommentEbookRelation createdCommentEbookRelation = new CommentEbookRelation();
-        createdCommentEbookRelation.setComment(comment);
-        createdCommentEbookRelation.setEbook(ebook);
-
-        commentEbookRelationService.save(createdCommentEbookRelation);
+        CommentEbookRelation createdCommentEbookRelation = commentEbookRelationService.create(commentEbookRelationRequest);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdCommentEbookRelation.getId()))

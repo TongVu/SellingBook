@@ -15,7 +15,7 @@ public class InvoiceDetailDto {
 
     private double ebookPrice;
 
-//    private Invoice invoice;
+    //    private Invoice invoice;
     private LocalDate invoiceInvoiceDate;
 
     private Integer invoiceQuantity;
@@ -23,11 +23,11 @@ public class InvoiceDetailDto {
     private double invoiceTotalPayment;
 
     // private invoiceCreditCard
-    private Integer invoiceCreditCardCardNumber ;
+    private Integer invoiceCreditCardCardNumber;
 
     //private invoiceAccount
     private String invoiceAccountFullName;
 
-//    private Ebook ebook;
+    //    private Ebook ebook;
     private String ebookTitle;
 }

@@ -1,10 +1,16 @@
 package com.axonactive.demo.service.impl;
 
-import com.axonactive.demo.repository.EbookAuthorRelationRepository;
-import com.axonactive.demo.service.EbookAuthorRelationService;
-import com.axonactive.demo.service.mapper.EbookAuthorRelationMapper;
+import com.axonactive.demo.controller.request.EbookAuthorRelationRequest;
+import com.axonactive.demo.entity.Author;
+import com.axonactive.demo.entity.Ebook;
 import com.axonactive.demo.entity.EbookAuthorRelation;
+import com.axonactive.demo.exception.BusinessLogicException;
+import com.axonactive.demo.repository.EbookAuthorRelationRepository;
+import com.axonactive.demo.service.AuthorService;
+import com.axonactive.demo.service.EbookAuthorRelationService;
+import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.dto.ebookAuthorRelationDto.EbookAuthorRelationDto;
+import com.axonactive.demo.service.mapper.EbookAuthorRelationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +23,15 @@ import java.util.Optional;
 public class EbookAuthorRelationServiceImpl implements EbookAuthorRelationService {
     @Autowired
     private EbookAuthorRelationRepository ebookAuthorRelationRepository;
+
     @Autowired
     private EbookAuthorRelationMapper ebookAuthorRelationMapper;
+
+    @Autowired
+    private EbookService ebookService;
+
+    @Autowired
+    private AuthorService authorService;
 
     @Override
     public List<EbookAuthorRelation> getAll() {
@@ -41,7 +54,36 @@ public class EbookAuthorRelationServiceImpl implements EbookAuthorRelationServic
     }
 
     @Override
-    public List<EbookAuthorRelation> findByAuthorLastNameContainingIgnoreCase(String authorname){
+    public EbookAuthorRelation update(EbookAuthorRelation updatedEbookAuthorRelation, EbookAuthorRelationRequest ebookAuthorRelationRequest) {
+        Ebook requestedEbook = ebookService.findEbookById(ebookAuthorRelationRequest.getEbookId())
+                .orElseThrow(BusinessLogicException::ebookNotFound);
+
+        Author requestedAuthor = authorService.findAuthorById(ebookAuthorRelationRequest.getAuthorId())
+                .orElseThrow(BusinessLogicException::authorNotFound);
+
+        updatedEbookAuthorRelation.setEbook(requestedEbook);
+        updatedEbookAuthorRelation.setAuthor(requestedAuthor);
+
+        return ebookAuthorRelationRepository.save(updatedEbookAuthorRelation);
+    }
+
+    @Override
+    public EbookAuthorRelation create(EbookAuthorRelationRequest ebookAuthorRelationRequest) {
+        Ebook requestedEbook = ebookService.findEbookById(ebookAuthorRelationRequest.getEbookId())
+                .orElseThrow(BusinessLogicException::ebookNotFound);
+
+        Author requestedAuthor = authorService.findAuthorById(ebookAuthorRelationRequest.getAuthorId())
+                .orElseThrow(BusinessLogicException::authorNotFound);
+
+        EbookAuthorRelation createdEbookAuthorRelation = new EbookAuthorRelation();
+        createdEbookAuthorRelation.setEbook(requestedEbook);
+        createdEbookAuthorRelation.setAuthor(requestedAuthor);
+
+        return ebookAuthorRelationRepository.save(createdEbookAuthorRelation);
+    }
+
+    @Override
+    public List<EbookAuthorRelation> findByAuthorLastNameContainingIgnoreCase(String authorname) {
         return ebookAuthorRelationRepository.findByAuthorLastNameContainingIgnoreCase(authorname);
     }
 

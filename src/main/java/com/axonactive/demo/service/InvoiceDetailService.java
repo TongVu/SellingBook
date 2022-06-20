@@ -1,5 +1,6 @@
 package com.axonactive.demo.service;
 
+import com.axonactive.demo.controller.request.InvoiceDetailRequest;
 import com.axonactive.demo.entity.InvoiceDetail;
 
 import java.util.List;
@@ -9,6 +10,10 @@ public interface InvoiceDetailService {
     List<InvoiceDetail> getAll();
 
     InvoiceDetail save(InvoiceDetail invoiceDetail);
+
+    InvoiceDetail update(InvoiceDetail invoiceDetail, InvoiceDetailRequest invoiceDetailRequest);
+
+    InvoiceDetail create(InvoiceDetailRequest invoiceDetailRequest);
 
     void deleteById(Integer id);
 

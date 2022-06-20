@@ -1,7 +1,8 @@
 package com.axonactive.demo.service.impl;
 
-import com.axonactive.demo.repository.PublisherRepository;
+import com.axonactive.demo.controller.request.PublisherRequest;
 import com.axonactive.demo.entity.Publisher;
+import com.axonactive.demo.repository.PublisherRepository;
 import com.axonactive.demo.service.PublisherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,27 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public Publisher save(Publisher publisher) {
         return publisherRepository.save(publisher);
+    }
+
+    @Override
+    public Publisher update(Publisher publisher, PublisherRequest publisherRequest) {
+        publisher.setName(publisherRequest.getName());
+        publisher.setPhone(publisherRequest.getPhone());
+        publisher.setAddress(publisherRequest.getAddress());
+        publisher.setEmail(publisherRequest.getEmail());
+
+        return publisherRepository.save(publisher);
+    }
+
+    @Override
+    public Publisher create(PublisherRequest publisherRequest) {
+        Publisher createdPublisher = new Publisher();
+        createdPublisher.setName(publisherRequest.getName());
+        createdPublisher.setPhone(publisherRequest.getPhone());
+        createdPublisher.setAddress(publisherRequest.getAddress());
+        createdPublisher.setEmail(publisherRequest.getEmail());
+
+        return publisherRepository.save(createdPublisher);
     }
 
     @Override

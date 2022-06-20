@@ -8,11 +8,12 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 public class SellingBookApplication extends SpringBootServletInitializer {
 
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder app){
-		return app.sources(SellingBookApplication.class);
-	}
-	public static void main(String[] args) {
-		SpringApplication.run(SellingBookApplication.class, args);
-	}
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder app) {
+        return app.sources(SellingBookApplication.class);
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(SellingBookApplication.class, args);
+    }
 
 }

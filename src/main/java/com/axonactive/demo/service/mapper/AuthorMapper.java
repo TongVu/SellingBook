@@ -13,5 +13,6 @@ public interface AuthorMapper {
 
 
     AuthorDto toDto(Author author);
+
     List<AuthorDto> toDtos(List<Author> authors);
 }

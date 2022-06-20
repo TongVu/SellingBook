@@ -1,5 +1,6 @@
 package com.axonactive.demo.service;
 
+import com.axonactive.demo.controller.request.EbookRequest;
 import com.axonactive.demo.entity.Ebook;
 import com.axonactive.demo.service.dto.ebookDto.EbookInfoCategoryAuthorDto;
 
@@ -12,6 +13,10 @@ public interface EbookService {
     Ebook save(Ebook ebook);
 
     void deleteById(Integer id);
+
+    Ebook update(Ebook updatedEbook, EbookRequest ebookRequest);
+
+    Ebook create(EbookRequest ebookRequest);
 
     Optional<Ebook> findEbookById(Integer id);
 

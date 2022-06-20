@@ -13,6 +13,8 @@ public interface InvoiceService {
 
     void deleteById(Integer id);
 
+    Invoice update(Invoice updatedInvoice, InvoiceRequest invoiceRequest);
+
     Optional<Invoice> findInvoiceById(Integer id);
 
     Invoice create(InvoiceRequest invoiceRequest);

@@ -1,8 +1,12 @@
 package com.axonactive.demo.service.impl;
 
-import com.axonactive.demo.repository.CommentRepository;
-import com.axonactive.demo.service.CommentService;
+import com.axonactive.demo.controller.request.CommentRequest;
+import com.axonactive.demo.entity.Account;
 import com.axonactive.demo.entity.Comment;
+import com.axonactive.demo.exception.BusinessLogicException;
+import com.axonactive.demo.repository.CommentRepository;
+import com.axonactive.demo.service.AccountService;
+import com.axonactive.demo.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +18,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     @Autowired
-    private final CommentRepository commentRepository;
+    private CommentRepository commentRepository;
+    @Autowired
+    private AccountService accountService;
 
     @Override
     public List<Comment> getAll() {
@@ -24,6 +30,35 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment save(Comment comment) {
         return commentRepository.save(comment);
+    }
+
+    @Override
+    public Comment update(Comment updatedComment, CommentRequest commentRequest) {
+        Account requestedAccount = accountService.findAccountById(commentRequest.getAccountId())
+                .orElseThrow(BusinessLogicException::accountNotFound);
+
+        updatedComment.setCommentContent(commentRequest.getCommentContent());
+        updatedComment.setBookRating(commentRequest.getBookRating());
+        updatedComment.setCommentUpvote(commentRequest.getCommentUpvote());
+        updatedComment.setDate(commentRequest.getDate());
+        updatedComment.setAccount(requestedAccount);
+
+        return commentRepository.save(updatedComment);
+    }
+
+    @Override
+    public Comment create(CommentRequest commentRequest) {
+        Account requestedAccount = accountService.findAccountById(commentRequest.getAccountId())
+                .orElseThrow(BusinessLogicException::accountNotFound);
+
+        Comment createdComment = new Comment();
+        createdComment.setCommentContent(commentRequest.getCommentContent());
+        createdComment.setBookRating(commentRequest.getBookRating());
+        createdComment.setCommentUpvote(commentRequest.getCommentUpvote());
+        createdComment.setDate(commentRequest.getDate());
+        createdComment.setAccount(requestedAccount);
+
+        return commentRepository.save(createdComment);
     }
 
     @Override

@@ -14,7 +14,7 @@ public interface InvoiceMapper {
 
     @Mapping(source = "creditCard.cardNumber", target = "creditCardCardNumber")
     @Mapping(target = "accountFullName", expression = "java(invoice.getAccount().getFirstName() + \" \" + invoice.getAccount().getLastName())")
-
     InvoiceDto toDto(Invoice invoice);
+
     List<InvoiceDto> toDtos(List<Invoice> invoiceList);
 }

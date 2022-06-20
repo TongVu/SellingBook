@@ -17,5 +17,5 @@ public class InvoiceDetailRequest {
 
     private Integer invoiceId;
 
-    private Integer  ebookId;
+    private Integer ebookId;
 }

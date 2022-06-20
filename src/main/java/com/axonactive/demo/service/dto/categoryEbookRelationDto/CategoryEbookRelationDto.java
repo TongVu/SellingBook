@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CategoryEbookRelationDto {
 
-//    private Ebook ebook
+    //    private Ebook ebook
     private String bookTitle;
 
     private Integer bookPage;

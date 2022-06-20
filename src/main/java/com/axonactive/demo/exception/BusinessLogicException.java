@@ -2,7 +2,7 @@ package com.axonactive.demo.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class BusinessLogicException  {
+public class BusinessLogicException {
     public static ResponseException notFound(String messageKey, String message) {
         return new ResponseException(messageKey, message, HttpStatus.NOT_FOUND);
     }

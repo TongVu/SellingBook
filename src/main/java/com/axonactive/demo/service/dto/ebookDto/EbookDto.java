@@ -21,7 +21,7 @@ public class EbookDto {
 
     private String viewLinkStatus;
 
-//    private Publisher publisher;
+    //    private Publisher publisher;
     private String publisherName;
 
     private String publisherEmail;

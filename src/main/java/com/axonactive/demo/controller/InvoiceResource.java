@@ -1,15 +1,11 @@
 package com.axonactive.demo.controller;
 
-import com.axonactive.demo.exception.BusinessLogicException;
-import com.axonactive.demo.service.AccountService;
-import com.axonactive.demo.service.mapper.InvoiceMapper;
 import com.axonactive.demo.controller.request.InvoiceRequest;
-import com.axonactive.demo.entity.Account;
-import com.axonactive.demo.entity.CreditCard;
 import com.axonactive.demo.entity.Invoice;
-import com.axonactive.demo.service.CreditCardService;
+import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.InvoiceService;
 import com.axonactive.demo.service.dto.invoiceDto.InvoiceDto;
+import com.axonactive.demo.service.mapper.InvoiceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,12 +24,6 @@ public class InvoiceResource {
     @Autowired
     InvoiceService invoiceService;
 
-    @Autowired
-    CreditCardService creditCardService;
-
-    @Autowired
-    AccountService accountService;
-
     @GetMapping
     public ResponseEntity<List<InvoiceDto>> getAll() {
         return ResponseEntity.ok(invoiceMapper.toDtos(invoiceService.getAll()));
@@ -50,23 +40,10 @@ public class InvoiceResource {
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDto> update(@PathVariable("id") Integer id,
                                              @RequestBody InvoiceRequest invoiceRequest) {
-        Account requestedAccount = accountService.findAccountById(invoiceRequest.getAccountId())
-                .orElseThrow(BusinessLogicException::accountNotFound);
-
-        CreditCard requestedCreditCard = creditCardService.findCreditCardById(invoiceRequest.getCreditCardId())
-                .orElseThrow(BusinessLogicException::creditCardNotFound);
-
         Invoice updatedInvoice = invoiceService.findInvoiceById(id)
                 .orElseThrow(BusinessLogicException::invoiceNotFound);
 
-        updatedInvoice.setInvoiceDate(invoiceRequest.getInvoiceDate());
-        updatedInvoice.setQuantity(invoiceRequest.getQuantity());
-        updatedInvoice.setPay(invoiceRequest.isPay());
-        updatedInvoice.setTotalPayment(invoiceRequest.getTotalPayment());
-        updatedInvoice.setCreditCard(requestedCreditCard);
-        updatedInvoice.setAccount(requestedAccount);
-
-        return ResponseEntity.ok(invoiceMapper.toDto(invoiceService.save(updatedInvoice)));
+        return ResponseEntity.ok(invoiceMapper.toDto(invoiceService.update(updatedInvoice, invoiceRequest)));
     }
 
     @PostMapping

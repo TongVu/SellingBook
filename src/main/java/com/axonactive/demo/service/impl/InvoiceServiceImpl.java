@@ -42,6 +42,24 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    public Invoice update(Invoice updatedInvoice, InvoiceRequest invoiceRequest) {
+        Account requestedAccount = accountService.findAccountById(invoiceRequest.getAccountId())
+                .orElseThrow(BusinessLogicException::accountNotFound);
+
+        CreditCard requestedCreditCard = creditCardService.findCreditCardById(invoiceRequest.getCreditCardId())
+                .orElseThrow(BusinessLogicException::creditCardNotFound);
+
+        updatedInvoice.setInvoiceDate(invoiceRequest.getInvoiceDate());
+        updatedInvoice.setQuantity(invoiceRequest.getQuantity());
+        updatedInvoice.setPay(invoiceRequest.isPay());
+        updatedInvoice.setTotalPayment(invoiceRequest.getTotalPayment());
+        updatedInvoice.setCreditCard(requestedCreditCard);
+        updatedInvoice.setAccount(requestedAccount);
+
+        return invoiceRepository.save(updatedInvoice);
+    }
+
+    @Override
     public Optional<Invoice> findInvoiceById(Integer id) {
         return invoiceRepository.findById(id);
     }
@@ -54,7 +72,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         Account requestedAccount = accountService.findAccountById(invoiceRequest.getAccountId())
                 .orElseThrow(BusinessLogicException::accountNotFound);
 
-        if(requestedCreditCard.getAccount().getId() != requestedAccount.getId()) {
+        if (requestedCreditCard.getAccount().getId() != requestedAccount.getId()) {
             return new Invoice();
         }
 
@@ -62,8 +80,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         createdInvoice.setInvoiceDate(invoiceRequest.getInvoiceDate());
         createdInvoice.setQuantity(invoiceRequest.getQuantity());
 
-        if(invoiceRequest.isPay() &&
-                requestedCreditCard.getBalance() - invoiceRequest.getTotalPayment() >= 0 ){
+        if (invoiceRequest.isPay() &&
+                requestedCreditCard.getBalance() - invoiceRequest.getTotalPayment() >= 0) {
             createdInvoice.setPay(invoiceRequest.isPay());
             requestedCreditCard.setBalance(requestedCreditCard.getBalance() - invoiceRequest.getTotalPayment());
         } else createdInvoice.setPay(false);

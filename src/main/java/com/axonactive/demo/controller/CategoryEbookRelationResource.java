@@ -1,15 +1,13 @@
 package com.axonactive.demo.controller;
 
+import com.axonactive.demo.controller.request.CategoryEbookRelationRequest;
+import com.axonactive.demo.entity.CategoryEbookRelation;
 import com.axonactive.demo.exception.BusinessLogicException;
+import com.axonactive.demo.service.CategoryEbookRelationService;
 import com.axonactive.demo.service.CategoryService;
 import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.dto.categoryEbookRelationDto.CategoryEbookRelationDto;
 import com.axonactive.demo.service.mapper.CategoryEbookRelationMapper;
-import com.axonactive.demo.controller.request.CategoryEbookRelationRequest;
-import com.axonactive.demo.entity.Category;
-import com.axonactive.demo.entity.CategoryEbookRelation;
-import com.axonactive.demo.entity.Ebook;
-import com.axonactive.demo.service.CategoryEbookRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +22,13 @@ public class CategoryEbookRelationResource {
 
     @Autowired
     CategoryEbookRelationService categoryEbookRelationService;
+
     @Autowired
     CategoryEbookRelationMapper categoryEbookRelationMapper;
+
     @Autowired
     EbookService ebookService;
+
     @Autowired
     CategoryService categoryService;
 
@@ -47,7 +48,7 @@ public class CategoryEbookRelationResource {
     @GetMapping("/find")
     public ResponseEntity<?> getEbooksHaveRatingGreaterThan(@RequestParam(value = "rating", required = false) Double ratingPoints,
                                                             @RequestParam(value = "category", defaultValue = "empty", required = false) String categoryName) {
-        if(ratingPoints != null &&
+        if (ratingPoints != null &&
                 !categoryName.equals("empty"))
             return ResponseEntity.ok(categoryEbookRelationMapper.toDtos(
                     categoryEbookRelationService.findEbookByCategoryNameIgnoreCaseAndEbookRatingGreaterThan(categoryName, ratingPoints)));
@@ -67,34 +68,17 @@ public class CategoryEbookRelationResource {
     @PutMapping("/{id}")
     public ResponseEntity<CategoryEbookRelationDto> update(@PathVariable("id") Integer id,
                                                            @RequestBody CategoryEbookRelationRequest categoryEbookRelationRequest) {
-        Ebook requestedEbook = ebookService.findEbookById(categoryEbookRelationRequest.getEbookId())
-                .orElseThrow(BusinessLogicException::ebookNotFound);
-
-        Category requestedCategory = categoryService.findCategoryById(categoryEbookRelationRequest.getCategoryId())
-                .orElseThrow(BusinessLogicException::categoryNotFound);
-
         CategoryEbookRelation updatedCategoryEbookRelation = categoryEbookRelationService.findCategoryEbookRelationById(id)
                 .orElseThrow(BusinessLogicException::categoryEbookRelationNotFound);
 
-        updatedCategoryEbookRelation.setCategory(requestedCategory);
-        updatedCategoryEbookRelation.setEbook(requestedEbook);
+        CategoryEbookRelation categoryEbookRelation = categoryEbookRelationService.update(updatedCategoryEbookRelation, categoryEbookRelationRequest);
 
-        return ResponseEntity.ok(categoryEbookRelationMapper.toDto(categoryEbookRelationService.save(updatedCategoryEbookRelation)));
+        return ResponseEntity.ok(categoryEbookRelationMapper.toDto(categoryEbookRelation));
     }
 
     @PostMapping
     public ResponseEntity<CategoryEbookRelationDto> create(@RequestBody CategoryEbookRelationRequest categoryEbookRelationRequest) {
-
-        Ebook requestedEbook = ebookService.findEbookById(categoryEbookRelationRequest.getEbookId())
-                .orElseThrow(BusinessLogicException::ebookNotFound);
-
-        Category requestedCategory = categoryService.findCategoryById(categoryEbookRelationRequest.getCategoryId())
-                .orElseThrow(BusinessLogicException::categoryNotFound);
-
-        CategoryEbookRelation createdCategoryEbookRelation = new CategoryEbookRelation();
-        createdCategoryEbookRelation.setCategory(requestedCategory);
-        createdCategoryEbookRelation.setEbook(requestedEbook);
-        categoryEbookRelationService.save(createdCategoryEbookRelation);
+        CategoryEbookRelation createdCategoryEbookRelation = categoryEbookRelationService.create(categoryEbookRelationRequest);
 
         return ResponseEntity
                 .created(URI.create(PATH + "/" + createdCategoryEbookRelation.getId()))
@@ -103,8 +87,6 @@ public class CategoryEbookRelationResource {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
-        CategoryEbookRelation deleteCategoryEbookRelation = categoryEbookRelationService.findCategoryEbookRelationById(id)
-                .orElseThrow(BusinessLogicException::categoryEbookRelationNotFound);
         categoryEbookRelationService.deleteById(id);
 
         return ResponseEntity.noContent().build();

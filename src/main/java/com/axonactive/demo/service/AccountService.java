@@ -1,6 +1,5 @@
 package com.axonactive.demo.service;
 
-import com.axonactive.demo.controller.AccountResource;
 import com.axonactive.demo.controller.request.AccountRequest;
 import com.axonactive.demo.entity.Account;
 import com.axonactive.demo.service.dto.accountDto.AccountInvocesDto;
