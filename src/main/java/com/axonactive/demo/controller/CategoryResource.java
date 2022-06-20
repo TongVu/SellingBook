@@ -6,6 +6,7 @@ import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.CategoryService;
 import com.axonactive.demo.service.dto.categoryDto.CategoryDto;
 import com.axonactive.demo.service.mapper.CategoryMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(CategoryResource.PATH)
 public class CategoryResource {
@@ -31,6 +33,7 @@ public class CategoryResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDto> getById(@PathVariable(value = "id") Integer id) {
+        log.info("Searching for category has id {} ", id);
         Category category = categoryService.findCategoryById(id)
                 .orElseThrow(BusinessLogicException::categoryNotFound);
 
@@ -40,6 +43,7 @@ public class CategoryResource {
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDto> update(@PathVariable("id") Integer id,
                                               @RequestBody CategoryRequest categoryRequest) {
+        log.info("Searching for category has id {} ", id);
         Category updatedCategory = categoryService.findCategoryById(id)
                 .orElseThrow(BusinessLogicException::categoryNotFound);
 
@@ -59,6 +63,7 @@ public class CategoryResource {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) {
+        log.info("Searching for category has id {} ", id);
         Category deletedCategory = categoryService.findCategoryById(id)
                 .orElseThrow(BusinessLogicException::categoryNotFound);
 

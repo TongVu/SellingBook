@@ -11,12 +11,14 @@ import com.axonactive.demo.service.CategoryService;
 import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.dto.categoryEbookRelationDto.CategoryEbookRelationDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoryEbookRelationServiceImpl implements CategoryEbookRelationService {
@@ -41,6 +43,7 @@ public class CategoryEbookRelationServiceImpl implements CategoryEbookRelationSe
 
     @Override
     public void deleteById(Integer id) {
+        log.info("Searching for category_ebook_relation has id {} ", id);
         CategoryEbookRelation deleteCategoryEbookRelation = categoryEbookRelationRepository.findById(id)
                 .orElseThrow(BusinessLogicException::categoryEbookRelationNotFound);
 
@@ -49,9 +52,11 @@ public class CategoryEbookRelationServiceImpl implements CategoryEbookRelationSe
 
     @Override
     public CategoryEbookRelation update(CategoryEbookRelation updatedCategoryEbookRelation, CategoryEbookRelationRequest categoryEbookRelationRequest) {
+        log.info("Searching for ebook has id {} ", categoryEbookRelationRequest.getEbookId());
         Ebook requestedEbook = ebookService.findEbookById(categoryEbookRelationRequest.getEbookId())
                 .orElseThrow(BusinessLogicException::ebookNotFound);
 
+        log.info("Searching for category has id {} ", categoryEbookRelationRequest.getCategoryId());
         Category requestedCategory = categoryService.findCategoryById(categoryEbookRelationRequest.getCategoryId())
                 .orElseThrow(BusinessLogicException::categoryNotFound);
 
@@ -63,9 +68,11 @@ public class CategoryEbookRelationServiceImpl implements CategoryEbookRelationSe
 
     @Override
     public CategoryEbookRelation create(CategoryEbookRelationRequest categoryEbookRelationRequest) {
+        log.info("Searching for ebook has id {} ", categoryEbookRelationRequest.getEbookId());
         Ebook requestedEbook = ebookService.findEbookById(categoryEbookRelationRequest.getEbookId())
                 .orElseThrow(BusinessLogicException::ebookNotFound);
 
+        log.info("Searching for category has id {} ", categoryEbookRelationRequest.getCategoryId());
         Category requestedCategory = categoryService.findCategoryById(categoryEbookRelationRequest.getCategoryId())
                 .orElseThrow(BusinessLogicException::categoryNotFound);
 

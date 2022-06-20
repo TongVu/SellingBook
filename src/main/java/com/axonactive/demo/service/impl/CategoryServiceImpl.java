@@ -5,12 +5,14 @@ import com.axonactive.demo.entity.Category;
 import com.axonactive.demo.repository.CategoryRepository;
 import com.axonactive.demo.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {

@@ -10,12 +10,14 @@ import com.axonactive.demo.service.CommentEbookRelationService;
 import com.axonactive.demo.service.CommentService;
 import com.axonactive.demo.service.EbookService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentEbookRelationServiceImpl implements CommentEbookRelationService {
@@ -45,9 +47,11 @@ public class CommentEbookRelationServiceImpl implements CommentEbookRelationServ
 
     @Override
     public CommentEbookRelation update(CommentEbookRelation updatedCommentEbookRelation, CommentEbookRelationRequest commentEbookRelationRequest) {
+        log.info("Searching for comment has id {} ", commentEbookRelationRequest.getCommentId());
         Comment requestedComment = commentService.findCommentById(commentEbookRelationRequest.getCommentId())
                 .orElseThrow(BusinessLogicException::commenNotFound);
 
+        log.info("Searching for ebook has id {} ", commentEbookRelationRequest.getEbookId());
         Ebook requetedEbook = ebookService.findEbookById(commentEbookRelationRequest.getEbookId())
                 .orElseThrow(BusinessLogicException::ebookNotFound);
 
@@ -59,10 +63,11 @@ public class CommentEbookRelationServiceImpl implements CommentEbookRelationServ
 
     @Override
     public CommentEbookRelation create(CommentEbookRelationRequest commentEbookRelationRequest) {
-
+        log.info("Searching for comment has id {} ", commentEbookRelationRequest.getCommentId());
         Comment comment = commentService.findCommentById(commentEbookRelationRequest.getCommentId())
                 .orElseThrow(BusinessLogicException::commenNotFound);
 
+        log.info("Searching for ebook has id {} ", commentEbookRelationRequest.getEbookId());
         Ebook ebook = ebookService.findEbookById(commentEbookRelationRequest.getEbookId())
                 .orElseThrow(BusinessLogicException::ebookNotFound);
 

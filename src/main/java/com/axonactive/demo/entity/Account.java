@@ -18,16 +18,12 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
     private String firstName;
 
-    @NotNull
     private String lastName;
 
-    @NotNull
     private LocalDate dob;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private Gender gender;
 

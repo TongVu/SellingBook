@@ -5,12 +5,14 @@ import com.axonactive.demo.entity.Author;
 import com.axonactive.demo.repository.AuthorRepository;
 import com.axonactive.demo.service.AuthorService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {

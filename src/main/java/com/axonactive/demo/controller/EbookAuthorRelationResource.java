@@ -6,6 +6,7 @@ import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.EbookAuthorRelationService;
 import com.axonactive.demo.service.dto.ebookAuthorRelationDto.EbookAuthorRelationDto;
 import com.axonactive.demo.service.mapper.EbookAuthorRelationMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(EbookAuthorRelationResource.PATH)
 public class EbookAuthorRelationResource {
@@ -31,6 +33,7 @@ public class EbookAuthorRelationResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<EbookAuthorRelationDto> getById(@PathVariable("id") Integer id) {
+        log.info("Searching for ebook_author_relation has id {} ", id);
         EbookAuthorRelation ebookAuthorRelation = ebookAuthorRelationService.findEbookAuthorRelationById(id)
                 .orElseThrow(BusinessLogicException::ebookAuthorRelationNotFound);
 
@@ -59,6 +62,7 @@ public class EbookAuthorRelationResource {
     @PutMapping("/{id}")
     public ResponseEntity<EbookAuthorRelationDto> update(@PathVariable("id") Integer id,
                                                          @RequestBody EbookAuthorRelationRequest ebookAuthorRelationRequest) {
+        log.info("Searching for ebook_author_relation has id {} ", id);
         EbookAuthorRelation updatedEbookAuthorRelation = ebookAuthorRelationService.findEbookAuthorRelationById(id)
                 .orElseThrow(BusinessLogicException::ebookAuthorRelationNotFound);
 
@@ -76,6 +80,7 @@ public class EbookAuthorRelationResource {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) {
+        log.info("Searching for ebook_author_relation has id {} ", id);
         EbookAuthorRelation deletedEbookAuthorRelation = ebookAuthorRelationService.findEbookAuthorRelationById(id)
                 .orElseThrow(BusinessLogicException::ebookAuthorRelationNotFound);
         ebookAuthorRelationService.deleteById(id);

@@ -6,6 +6,7 @@ import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.CommentEbookRelationService;
 import com.axonactive.demo.service.dto.commentEbookRelationDto.CommentEbookRelationDto;
 import com.axonactive.demo.service.mapper.CommentEbookRelationMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(CommentEbookRelationResource.PATH)
 public class CommentEbookRelationResource {
@@ -31,6 +33,7 @@ public class CommentEbookRelationResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<CommentEbookRelationDto> getById(@PathVariable Integer id) {
+        log.info("Searching for comment_ebook_relation has id {} ", id);
         CommentEbookRelation foundComment = commentEbookRelationService.findCommentEbookRelationById(id)
                 .orElseThrow(BusinessLogicException::commenEbookRelationNotFound);
 
@@ -40,6 +43,7 @@ public class CommentEbookRelationResource {
     @PutMapping("/{id}")
     public ResponseEntity<CommentEbookRelationDto> update(@PathVariable("id") Integer id,
                                                           @RequestBody CommentEbookRelationRequest commentEbookRelationRequest) {
+        log.info("Searching for comment_ebook_relation has id {} ", id);
         CommentEbookRelation commentEbookRelation = commentEbookRelationService.findCommentEbookRelationById(id)
                 .orElseThrow(BusinessLogicException::commenEbookRelationNotFound);
 
@@ -58,6 +62,7 @@ public class CommentEbookRelationResource {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+        log.info("Searching for comment_ebook_relation has id {} ", id);
         CommentEbookRelation deletedCommentEbookRelation = commentEbookRelationService.findCommentEbookRelationById(id)
                 .orElseThrow(BusinessLogicException::commenEbookRelationNotFound);
         commentEbookRelationService.deleteById(id);

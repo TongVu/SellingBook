@@ -6,6 +6,7 @@ import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.InvoiceService;
 import com.axonactive.demo.service.dto.invoiceDto.InvoiceDto;
 import com.axonactive.demo.service.mapper.InvoiceMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(InvoiceResource.PATH)
 public class InvoiceResource {
@@ -31,6 +33,7 @@ public class InvoiceResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<InvoiceDto> getById(@PathVariable("id") Integer id) {
+        log.info("Searching for invoice has id {} ", id);
         Invoice foundInvoice = invoiceService.findInvoiceById(id)
                 .orElseThrow(BusinessLogicException::invoiceNotFound);
 
@@ -40,6 +43,7 @@ public class InvoiceResource {
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDto> update(@PathVariable("id") Integer id,
                                              @RequestBody InvoiceRequest invoiceRequest) {
+        log.info("Searching for invoice has id {} ", id);
         Invoice updatedInvoice = invoiceService.findInvoiceById(id)
                 .orElseThrow(BusinessLogicException::invoiceNotFound);
 
@@ -57,6 +61,7 @@ public class InvoiceResource {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+        log.info("Searching for invoice has id {} ", id);
         Invoice deletedInvoice = invoiceService.findInvoiceById(id)
                 .orElseThrow(BusinessLogicException::invoiceNotFound);
         invoiceService.deleteById(id);

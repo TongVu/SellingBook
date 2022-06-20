@@ -10,12 +10,14 @@ import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.CreditCardService;
 import com.axonactive.demo.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InvoiceServiceImpl implements InvoiceService {
@@ -43,9 +45,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public Invoice update(Invoice updatedInvoice, InvoiceRequest invoiceRequest) {
+        log.info("Searching for account has id {} ", invoiceRequest.getAccountId());
         Account requestedAccount = accountService.findAccountById(invoiceRequest.getAccountId())
                 .orElseThrow(BusinessLogicException::accountNotFound);
 
+        log.info("Searching for credit card has id {} ", invoiceRequest.getCreditCardId());
         CreditCard requestedCreditCard = creditCardService.findCreditCardById(invoiceRequest.getCreditCardId())
                 .orElseThrow(BusinessLogicException::creditCardNotFound);
 
@@ -66,9 +70,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public Invoice create(InvoiceRequest invoiceRequest) {
+        log.info("Searching for credit card has id {} ", invoiceRequest.getCreditCardId());
         CreditCard requestedCreditCard = creditCardService.findCreditCardById(invoiceRequest.getCreditCardId())
                 .orElseThrow(BusinessLogicException::creditCardNotFound);
 
+        log.info("Searching for account has id {} ", invoiceRequest.getAccountId());
         Account requestedAccount = accountService.findAccountById(invoiceRequest.getAccountId())
                 .orElseThrow(BusinessLogicException::accountNotFound);
 

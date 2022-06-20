@@ -10,12 +10,14 @@ import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.InvoiceDetailService;
 import com.axonactive.demo.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InvoiceDetailServiceImpl implements InvoiceDetailService {
@@ -40,9 +42,11 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
 
     @Override
     public InvoiceDetail update(InvoiceDetail invoiceDetail, InvoiceDetailRequest invoiceDetailRequest) {
+        log.info("Searching for invoice has id {} ", invoiceDetailRequest.getInvoiceId());
         Invoice requestedInvoice = invoiceService.findInvoiceById(invoiceDetailRequest.getInvoiceId())
                 .orElseThrow(BusinessLogicException::invoiceNotFound);
 
+        log.info("Searching for ebook has id {} ", invoiceDetailRequest.getEbookId());
         Ebook requestedEbook = ebookService.findEbookById(invoiceDetailRequest.getEbookId())
                 .orElseThrow(BusinessLogicException::ebookNotFound);
 
@@ -56,9 +60,11 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
 
     @Override
     public InvoiceDetail create(InvoiceDetailRequest invoiceDetailRequest) {
+        log.info("Searching for invoice has id {} ", invoiceDetailRequest.getInvoiceId());
         Invoice requestedInvoice = invoiceService.findInvoiceById(invoiceDetailRequest.getInvoiceId())
                 .orElseThrow(BusinessLogicException::invoiceNotFound);
 
+        log.info("Searching for ebook has id {} ", invoiceDetailRequest.getEbookId());
         Ebook requestedEbook = ebookService.findEbookById(invoiceDetailRequest.getEbookId())
                 .orElseThrow(BusinessLogicException::ebookNotFound);
 

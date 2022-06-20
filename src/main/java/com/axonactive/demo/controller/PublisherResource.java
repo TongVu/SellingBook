@@ -6,6 +6,7 @@ import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.PublisherService;
 import com.axonactive.demo.service.dto.publisherDto.PublisherDto;
 import com.axonactive.demo.service.mapper.PublisherMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(PublisherResource.PATH)
 public class PublisherResource {
@@ -31,6 +33,7 @@ public class PublisherResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<PublisherDto> getById(@PathVariable("id") Integer id) {
+        log.info("Searching for publisher has id {} ", id);
         Publisher publisher = publisherService.findPublisherById(id)
                 .orElseThrow(BusinessLogicException::publisherNotFound);
 
@@ -40,6 +43,7 @@ public class PublisherResource {
     @PutMapping("/{id}")
     public ResponseEntity<PublisherDto> update(@PathVariable("id") Integer id,
                                                @RequestBody PublisherRequest publisherRequest) {
+        log.info("Searching for publisher has id {} ", id);
         Publisher updatedPublisher = publisherService.findPublisherById(id)
                 .orElseThrow(BusinessLogicException::publisherNotFound);
 
@@ -58,6 +62,7 @@ public class PublisherResource {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) {
+        log.info("Searching for publisher has id {} ", id);
         Publisher updatedPublisher = publisherService.findPublisherById(id)
                 .orElseThrow(BusinessLogicException::publisherNotFound);
 

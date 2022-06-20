@@ -12,12 +12,14 @@ import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.dto.ebookAuthorRelationDto.EbookAuthorRelationDto;
 import com.axonactive.demo.service.mapper.EbookAuthorRelationMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EbookAuthorRelationServiceImpl implements EbookAuthorRelationService {
@@ -55,9 +57,11 @@ public class EbookAuthorRelationServiceImpl implements EbookAuthorRelationServic
 
     @Override
     public EbookAuthorRelation update(EbookAuthorRelation updatedEbookAuthorRelation, EbookAuthorRelationRequest ebookAuthorRelationRequest) {
+        log.info("Searching for ebook has id {} ", ebookAuthorRelationRequest.getEbookId());
         Ebook requestedEbook = ebookService.findEbookById(ebookAuthorRelationRequest.getEbookId())
                 .orElseThrow(BusinessLogicException::ebookNotFound);
 
+        log.info("Searching for author has id {} ", ebookAuthorRelationRequest.getAuthorId());
         Author requestedAuthor = authorService.findAuthorById(ebookAuthorRelationRequest.getAuthorId())
                 .orElseThrow(BusinessLogicException::authorNotFound);
 
@@ -69,9 +73,11 @@ public class EbookAuthorRelationServiceImpl implements EbookAuthorRelationServic
 
     @Override
     public EbookAuthorRelation create(EbookAuthorRelationRequest ebookAuthorRelationRequest) {
+        log.info("Searching for ebook has id {} ", ebookAuthorRelationRequest.getEbookId());
         Ebook requestedEbook = ebookService.findEbookById(ebookAuthorRelationRequest.getEbookId())
                 .orElseThrow(BusinessLogicException::ebookNotFound);
 
+        log.info("Searching for author has id {} ", ebookAuthorRelationRequest.getAuthorId());
         Author requestedAuthor = authorService.findAuthorById(ebookAuthorRelationRequest.getAuthorId())
                 .orElseThrow(BusinessLogicException::authorNotFound);
 

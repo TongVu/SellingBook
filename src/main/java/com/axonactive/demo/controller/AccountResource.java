@@ -8,6 +8,7 @@ import com.axonactive.demo.service.dto.accountDto.AccountDto;
 import com.axonactive.demo.service.dto.accountDto.AccountInvocesDto;
 import com.axonactive.demo.service.dto.ebookDto.EbookPurchasedDto;
 import com.axonactive.demo.service.mapper.AccountMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(AccountResource.PATH)
 public class AccountResource {
@@ -38,6 +40,7 @@ public class AccountResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable(value = "id") Integer id) {
+        log.info("Searching for account has id {} ", id);
         Account account = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
 
         return ResponseEntity.ok(accountMapper.toDto(account));
@@ -46,6 +49,7 @@ public class AccountResource {
     @GetMapping("/{id}/purchasedbooks")
     public ResponseEntity<List<EbookPurchasedDto>> getPurcharsedEbooks(@PathVariable("id") Integer id,
                                                                        @RequestParam(value = "paid") Boolean isPay) {
+        log.info("Searching for account has id {} ", id);
         Account account = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
 
         if (isPay)
@@ -56,6 +60,7 @@ public class AccountResource {
 
     @GetMapping("/{id}/invoices")
     public ResponseEntity<List<AccountInvocesDto>> getAllInvoices(@PathVariable("id") Integer id) {
+        log.info("Searching for account has id {} ", id);
         Account account = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
 
         return ResponseEntity.ok(accountService.findAllInvoices(id));
@@ -85,6 +90,7 @@ public class AccountResource {
     @PutMapping("/{id}")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable("id") Integer id,
                                                     @RequestBody AccountRequest account) {
+        log.info("Searching for account has id {} ", id);
         Account updatedAccount = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
 
         accountService.update(updatedAccount, account);
@@ -94,6 +100,7 @@ public class AccountResource {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Integer id) {
+        log.info("Searching for account has id {} ", id);
         Account deletedAccount = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
 
         accountService.deleteById(id);

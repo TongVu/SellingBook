@@ -8,6 +8,7 @@ import com.axonactive.demo.service.CategoryService;
 import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.dto.categoryEbookRelationDto.CategoryEbookRelationDto;
 import com.axonactive.demo.service.mapper.CategoryEbookRelationMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(CategoryEbookRelationResource.PATH)
 public class CategoryEbookRelationResource {
@@ -39,6 +41,7 @@ public class CategoryEbookRelationResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryEbookRelationDto> getById(@PathVariable(value = "id") Integer id) {
+        log.info("Searching for category_ebook_relation has id {} ", id);
         CategoryEbookRelation foundCategoryEbookRelation = categoryEbookRelationService.findCategoryEbookRelationById(id)
                 .orElseThrow(BusinessLogicException::categoryEbookRelationNotFound);
 
@@ -68,6 +71,7 @@ public class CategoryEbookRelationResource {
     @PutMapping("/{id}")
     public ResponseEntity<CategoryEbookRelationDto> update(@PathVariable("id") Integer id,
                                                            @RequestBody CategoryEbookRelationRequest categoryEbookRelationRequest) {
+        log.info("Searching for category_ebook_relation has id {} ", id);
         CategoryEbookRelation updatedCategoryEbookRelation = categoryEbookRelationService.findCategoryEbookRelationById(id)
                 .orElseThrow(BusinessLogicException::categoryEbookRelationNotFound);
 

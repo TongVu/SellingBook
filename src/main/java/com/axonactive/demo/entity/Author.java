@@ -19,12 +19,10 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
     private LocalDate dob;
 
     private String address;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private Gender gender;
 

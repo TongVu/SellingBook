@@ -8,12 +8,14 @@ import com.axonactive.demo.repository.CommentRepository;
 import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -34,6 +36,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment update(Comment updatedComment, CommentRequest commentRequest) {
+        log.info("Searching for account has id {} ", commentRequest.getAccountId());
         Account requestedAccount = accountService.findAccountById(commentRequest.getAccountId())
                 .orElseThrow(BusinessLogicException::accountNotFound);
 
@@ -48,6 +51,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment create(CommentRequest commentRequest) {
+        log.info("Searching for account has id {} ", commentRequest.getAccountId());
         Account requestedAccount = accountService.findAccountById(commentRequest.getAccountId())
                 .orElseThrow(BusinessLogicException::accountNotFound);
 

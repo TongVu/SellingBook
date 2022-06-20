@@ -4,10 +4,10 @@ import com.axonactive.demo.controller.request.EbookRequest;
 import com.axonactive.demo.entity.Ebook;
 import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.EbookService;
-import com.axonactive.demo.service.PublisherService;
 import com.axonactive.demo.service.dto.ebookDto.EbookDto;
 import com.axonactive.demo.service.dto.ebookDto.EbookInfoCategoryAuthorDto;
 import com.axonactive.demo.service.mapper.EbookMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping(EbookResource.PATH)
 public class EbookResource {
@@ -34,6 +35,7 @@ public class EbookResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<EbookDto> getById(@PathVariable("id") Integer id) {
+        log.info("Searching for ebook has id {} ", id);
         Ebook foundEbook = ebookService.findEbookById(id)
                 .orElseThrow(BusinessLogicException::ebookNotFound);
 
@@ -48,6 +50,7 @@ public class EbookResource {
     @PutMapping("/{id}")
     public ResponseEntity<EbookDto> update(@PathVariable("id") Integer id,
                                            @RequestBody EbookRequest ebookRequest) {
+        log.info("Searching for ebook has id {} ", id);
         Ebook updatedEbook = ebookService.findEbookById(id)
                 .orElseThrow(BusinessLogicException::ebookAuthorRelationNotFound);
 
@@ -65,6 +68,7 @@ public class EbookResource {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+        log.info("Searching for ebook has id {} ", id);
         Ebook deletedEbook = ebookService.findEbookById(id)
                 .orElseThrow(BusinessLogicException::ebookNotFound);
 

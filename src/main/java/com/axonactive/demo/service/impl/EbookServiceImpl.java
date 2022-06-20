@@ -9,12 +9,14 @@ import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.PublisherService;
 import com.axonactive.demo.service.dto.ebookDto.EbookInfoCategoryAuthorDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EbookServiceImpl implements EbookService {
@@ -42,6 +44,7 @@ public class EbookServiceImpl implements EbookService {
 
     @Override
     public Ebook update(Ebook updatedEbook, EbookRequest ebookRequest) {
+        log.info("Searching for publisher has id {} ", ebookRequest.getPublisherId());
         Publisher requestedPublisher = publisherService.findPublisherById(ebookRequest.getPublisherId())
                 .orElseThrow(BusinessLogicException::publisherNotFound);
 
@@ -57,6 +60,7 @@ public class EbookServiceImpl implements EbookService {
 
     @Override
     public Ebook create(EbookRequest ebookRequest) {
+        log.info("Searching for publisher has id {} ", ebookRequest.getPublisherId());
         Publisher requestedPublisher = publisherService.findPublisherById(ebookRequest.getPublisherId())
                 .orElseThrow(BusinessLogicException::publisherNotFound);
 

@@ -8,12 +8,14 @@ import com.axonactive.demo.repository.CreditCardRepository;
 import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.CreditCardService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreditCardServiceImpl implements CreditCardService {
@@ -36,6 +38,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Override
     public CreditCard update(CreditCard updatedCreditCard, CreditCardRequest creditCardRequest) {
+        log.info("Searching for account has id {} ", creditCardRequest.getAccountId());
         Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
                 .orElseThrow(BusinessLogicException::authorNotFound);
 
@@ -49,6 +52,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 
     @Override
     public CreditCard create(CreditCardRequest creditCardRequest) {
+        log.info("Searching for account has id {} ", creditCardRequest.getAccountId());
         Account requestedAccount = accountService.findAccountById(creditCardRequest.getAccountId())
                 .orElseThrow(BusinessLogicException::accountNotFound);
 
