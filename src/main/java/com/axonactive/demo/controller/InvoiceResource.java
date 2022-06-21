@@ -63,8 +63,12 @@ public class InvoiceResource {
     public ResponseEntity<InvoiceDto> buyEbook(@RequestParam("accountId") Integer accountId,
                                                @RequestParam("ebookId") Integer ebookId,
                                                @RequestParam("creditCardId") Integer creditCardId) {
+        Invoice createdInvoice = invoiceService.buyEbook(accountId, ebookId, creditCardId);
 
-        return ResponseEntity.ok(invoiceMapper.toDto(invoiceService.buyEbook(accountId, ebookId, creditCardId)));
+        invoiceService.findInvoiceById(createdInvoice.getId())
+                .orElseThrow(BusinessLogicException::accountAndCreditCardNotMatch);
+
+        return ResponseEntity.ok(invoiceMapper.toDto(createdInvoice));
     }
 
     @DeleteMapping("/{id}")

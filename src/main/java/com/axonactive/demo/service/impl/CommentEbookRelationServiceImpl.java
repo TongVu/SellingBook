@@ -82,4 +82,9 @@ public class CommentEbookRelationServiceImpl implements CommentEbookRelationServ
     public Optional<CommentEbookRelation> findCommentEbookRelationById(Integer id) {
         return commentEbookRelationRepository.findById(id);
     }
+
+    @Override
+    public List<Comment> findCommentByEbookId(Integer id) {
+        return commentEbookRelationRepository.findCommentByEbookId(id);
+    }
 }

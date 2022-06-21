@@ -1,5 +1,6 @@
 package com.axonactive.demo.service.impl;
 
+import com.axonactive.demo.controller.request.InvoiceDetailRequest;
 import com.axonactive.demo.controller.request.InvoiceRequest;
 import com.axonactive.demo.entity.Account;
 import com.axonactive.demo.entity.CreditCard;
@@ -12,11 +13,13 @@ import com.axonactive.demo.repository.InvoiceDetailRepository;
 import com.axonactive.demo.repository.InvoiceRepository;
 import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.CreditCardService;
+import com.axonactive.demo.service.InvoiceDetailService;
 import com.axonactive.demo.service.InvoiceService;
 import com.axonactive.demo.service.dto.invoiceDto.InvoiceDto;
 import com.axonactive.demo.service.mapper.InvoiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,13 +33,15 @@ import java.util.Optional;
 public class InvoiceServiceImpl implements InvoiceService {
     @Autowired
     private InvoiceRepository invoiceRepository;
+
     @Autowired
     private CreditCardService creditCardService;
+
     @Autowired
     private AccountService accountService;
 
     @Autowired
-    private InvoiceDetailRepository invoiceDetailRepository;
+    private InvoiceDetailService invoiceDetailService;
 
     @Autowired
     private EbookRepository ebookRepository;
@@ -106,8 +111,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         Account requestedAccount = accountService.findAccountById(invoiceRequest.getAccountId())
                 .orElseThrow(BusinessLogicException::accountNotFound);
 
-        accountService.findAccountById(requestedCreditCard.getAccount().getId())
-                .orElseThrow(BusinessLogicException::accountAndCreditCardNotMatch);
+        if (requestedCreditCard.getAccount().getId() != invoiceRequest.getAccountId()) {
+            Invoice invoice = new Invoice();
+            invoice.setId(-1);
+
+            return invoice;
+        }
 
         Invoice createdInvoice = new Invoice();
         createdInvoice.setInvoiceDate(invoiceRequest.getInvoiceDate());
@@ -123,7 +132,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         createdInvoice.setCreditCard(requestedCreditCard);
         createdInvoice.setAccount(requestedAccount);
 
-        return invoiceRepository.save(createdInvoice);
+        return invoiceRepository.saveAndFlush(createdInvoice);
     }
 
     @Override
@@ -144,10 +153,22 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceRequest.setInvoiceDate(LocalDate.now());
         invoiceRequest.setQuantity(1);
         invoiceRequest.setPay(true);
-        invoiceRequest.setTotalPayment(invoiceDetailRepository.findByEbookId(ebookId).get().getEbookPrice());
+        invoiceRequest.setTotalPayment(invoiceDetailService.findByEbookId(ebookId).get().getEbookPrice());
         invoiceRequest.setCreditCardId(creditCardId);
         invoiceRequest.setAccountId(accountId);
 
-        return create(invoiceRequest);
+        Invoice createdInvoice = create(invoiceRequest);
+
+        if(createdInvoice.getId() != -1){ // creating invoice has failed, don't need to create invoiceDetail
+            InvoiceDetailRequest invoiceDetailRequest = new InvoiceDetailRequest();
+            invoiceDetailRequest.setDateAdded(LocalDate.now());
+            invoiceDetailRequest.setEbookPrice(invoiceDetailService.findByEbookId(ebookId).get().getEbookPrice());
+            invoiceDetailRequest.setInvoiceId(createdInvoice.getId());
+            invoiceDetailRequest.setEbookId(ebookId);
+
+            invoiceDetailService.create(invoiceDetailRequest);
+        }
+
+        return createdInvoice;
     }
 }

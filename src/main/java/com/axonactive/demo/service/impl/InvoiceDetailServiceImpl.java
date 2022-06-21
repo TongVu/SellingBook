@@ -6,6 +6,7 @@ import com.axonactive.demo.entity.Invoice;
 import com.axonactive.demo.entity.InvoiceDetail;
 import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.repository.InvoiceDetailRepository;
+import com.axonactive.demo.repository.InvoiceRepository;
 import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.InvoiceDetailService;
 import com.axonactive.demo.service.InvoiceService;
@@ -28,7 +29,7 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
     private EbookService ebookService;
 
     @Autowired
-    private InvoiceService invoiceService;
+    private InvoiceRepository invoiceRepository;
 
     @Override
     public List<InvoiceDetail> getAll() {
@@ -43,7 +44,7 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
     @Override
     public InvoiceDetail update(InvoiceDetail invoiceDetail, InvoiceDetailRequest invoiceDetailRequest) {
         log.info("Searching for invoice has id {} ", invoiceDetailRequest.getInvoiceId());
-        Invoice requestedInvoice = invoiceService.findInvoiceById(invoiceDetailRequest.getInvoiceId())
+        Invoice requestedInvoice = invoiceRepository.findById(invoiceDetailRequest.getInvoiceId())
                 .orElseThrow(BusinessLogicException::invoiceNotFound);
 
         log.info("Searching for ebook has id {} ", invoiceDetailRequest.getEbookId());
@@ -61,7 +62,7 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
     @Override
     public InvoiceDetail create(InvoiceDetailRequest invoiceDetailRequest) {
         log.info("Searching for invoice has id {} ", invoiceDetailRequest.getInvoiceId());
-        Invoice requestedInvoice = invoiceService.findInvoiceById(invoiceDetailRequest.getInvoiceId())
+        Invoice requestedInvoice = invoiceRepository.findById(invoiceDetailRequest.getInvoiceId())
                 .orElseThrow(BusinessLogicException::invoiceNotFound);
 
         log.info("Searching for ebook has id {} ", invoiceDetailRequest.getEbookId());

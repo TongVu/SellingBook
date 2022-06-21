@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EbookAuthorRelationDto {
-    //    private Ebook ebook;
+
     private String ebookTitle;
 
     private Integer ebookPage;
@@ -18,9 +18,6 @@ public class EbookAuthorRelationDto {
 
     private String ebookPublisherName;
 
-    //    private Author author;
-
-    // author.firstName + author.lastName;
     private String authorFullName;
 
     private String authorEmail;

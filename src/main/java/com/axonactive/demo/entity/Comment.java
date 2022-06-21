@@ -30,7 +30,6 @@ public class Comment {
     @NotNull
     private LocalDate date;
 
-    // relation with usrAccount
     @ManyToOne
     @JoinColumn(name = "fk_account_id")
     private Account account;

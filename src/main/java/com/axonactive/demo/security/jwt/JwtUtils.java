@@ -11,11 +11,6 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.util.Date;
 
-/*
-	1.
-	The JwtTokenUtil is responsible for performing JWT operations like creation and validation.
-	It makes use of the io.josonwebtoken.Jwts for achieving this.
- */
 
 @Component
 public class JwtUtils implements Serializable {

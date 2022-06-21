@@ -15,19 +15,15 @@ public class InvoiceDetailDto {
 
     private double ebookPrice;
 
-    //    private Invoice invoice;
     private LocalDate invoiceInvoiceDate;
 
     private Integer invoiceQuantity;
 
     private double invoiceTotalPayment;
 
-    // private invoiceCreditCard
     private Integer invoiceCreditCardCardNumber;
 
-    //private invoiceAccount
     private String invoiceAccountFullName;
 
-    //    private Ebook ebook;
     private String ebookTitle;
 }

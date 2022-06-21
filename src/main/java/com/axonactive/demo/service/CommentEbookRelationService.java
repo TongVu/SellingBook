@@ -1,6 +1,7 @@
 package com.axonactive.demo.service;
 
 import com.axonactive.demo.controller.request.CommentEbookRelationRequest;
+import com.axonactive.demo.entity.Comment;
 import com.axonactive.demo.entity.CommentEbookRelation;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface CommentEbookRelationService {
     CommentEbookRelation create(CommentEbookRelationRequest commentEbookRelationRequest);
 
     Optional<CommentEbookRelation> findCommentEbookRelationById(Integer id);
+
+    List<Comment> findCommentByEbookId(Integer id);
 }

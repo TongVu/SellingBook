@@ -21,16 +21,10 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 public class AuthControllerImpl implements AuthController {
-	/*
-		4.
-		What is AuthenticationManager?
-	 */
 	private final AuthenticationManager authenticationManager;
 
-	// what is JwtUtils?
 	private final JwtUtils jwtUtils;
 
-	// where is the req mapping?
 	public ResponseEntity<?> authenticateUser(JwtRequest loginRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(

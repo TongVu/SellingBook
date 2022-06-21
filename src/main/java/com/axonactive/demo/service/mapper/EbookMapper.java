@@ -14,6 +14,7 @@ public interface EbookMapper {
 
     @Mapping(source = "publisher.name", target = "publisherName")
     @Mapping(source = "publisher.email", target = "publisherEmail")
+
     EbookDto toDto(Ebook ebook);
 
     List<EbookDto> toDtos(List<Ebook> ebooks);

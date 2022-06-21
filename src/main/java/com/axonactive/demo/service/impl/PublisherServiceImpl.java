@@ -16,6 +16,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PublisherServiceImpl implements PublisherService {
+
     @Autowired
     private final PublisherRepository publisherRepository;
 

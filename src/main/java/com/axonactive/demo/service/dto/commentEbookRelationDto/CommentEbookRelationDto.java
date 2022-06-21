@@ -11,15 +11,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class CommentEbookRelationDto {
 
-    //    private Comment comment;
     private String commentContent;
 
     private LocalDate date;
 
-    //   account.firstName + account.lastName
     private String accountName;
 
-    //    private Ebook ebook;
     private String ebookTitle;
 
 }
