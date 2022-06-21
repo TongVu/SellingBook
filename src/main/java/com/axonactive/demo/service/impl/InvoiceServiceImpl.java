@@ -3,17 +3,24 @@ package com.axonactive.demo.service.impl;
 import com.axonactive.demo.controller.request.InvoiceRequest;
 import com.axonactive.demo.entity.Account;
 import com.axonactive.demo.entity.CreditCard;
+import com.axonactive.demo.entity.Ebook;
 import com.axonactive.demo.entity.Invoice;
 import com.axonactive.demo.exception.BusinessLogicException;
+import com.axonactive.demo.repository.CreditCardRepository;
+import com.axonactive.demo.repository.EbookRepository;
+import com.axonactive.demo.repository.InvoiceDetailRepository;
 import com.axonactive.demo.repository.InvoiceRepository;
 import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.CreditCardService;
 import com.axonactive.demo.service.InvoiceService;
+import com.axonactive.demo.service.dto.invoiceDto.InvoiceDto;
+import com.axonactive.demo.service.mapper.InvoiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +34,18 @@ public class InvoiceServiceImpl implements InvoiceService {
     private CreditCardService creditCardService;
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private InvoiceDetailRepository invoiceDetailRepository;
+
+    @Autowired
+    private EbookRepository ebookRepository;
+
+    @Autowired
+    private CreditCardRepository creditCardRepository;
+
+    @Autowired
+    private InvoiceMapper invoiceMapper;
 
     @Override
     public List<Invoice> getAll() {
@@ -53,9 +72,18 @@ public class InvoiceServiceImpl implements InvoiceService {
         CreditCard requestedCreditCard = creditCardService.findCreditCardById(invoiceRequest.getCreditCardId())
                 .orElseThrow(BusinessLogicException::creditCardNotFound);
 
+        accountService.findAccountById(requestedCreditCard.getAccount().getId())
+                .orElseThrow(BusinessLogicException::accountAndCreditCardNotMatch);
+
         updatedInvoice.setInvoiceDate(invoiceRequest.getInvoiceDate());
         updatedInvoice.setQuantity(invoiceRequest.getQuantity());
-        updatedInvoice.setPay(invoiceRequest.isPay());
+
+        if (invoiceRequest.isPay() &&
+                requestedCreditCard.getBalance() - invoiceRequest.getTotalPayment() >= 0) {
+            updatedInvoice.setPay(invoiceRequest.isPay());
+            requestedCreditCard.setBalance(requestedCreditCard.getBalance() - invoiceRequest.getTotalPayment());
+        } else updatedInvoice.setPay(false);
+
         updatedInvoice.setTotalPayment(invoiceRequest.getTotalPayment());
         updatedInvoice.setCreditCard(requestedCreditCard);
         updatedInvoice.setAccount(requestedAccount);
@@ -78,9 +106,8 @@ public class InvoiceServiceImpl implements InvoiceService {
         Account requestedAccount = accountService.findAccountById(invoiceRequest.getAccountId())
                 .orElseThrow(BusinessLogicException::accountNotFound);
 
-        if (requestedCreditCard.getAccount().getId() != requestedAccount.getId()) {
-            return new Invoice();
-        }
+        accountService.findAccountById(requestedCreditCard.getAccount().getId())
+                .orElseThrow(BusinessLogicException::accountAndCreditCardNotMatch);
 
         Invoice createdInvoice = new Invoice();
         createdInvoice.setInvoiceDate(invoiceRequest.getInvoiceDate());
@@ -96,6 +123,31 @@ public class InvoiceServiceImpl implements InvoiceService {
         createdInvoice.setCreditCard(requestedCreditCard);
         createdInvoice.setAccount(requestedAccount);
 
-        return createdInvoice;
+        return invoiceRepository.save(createdInvoice);
+    }
+
+    @Override
+    public Invoice buyEbook(Integer accountId, Integer ebookId, Integer creditCardId) {
+        log.info("Searching for ebook has id {} ", ebookId);
+        Ebook requestedEbook = ebookRepository.findById(ebookId)
+                .orElseThrow(BusinessLogicException::ebookNotFound);
+
+        log.info("Searching for credit card has id {} ", creditCardId);
+        CreditCard requestedCreditCard = creditCardRepository.findById(creditCardId)
+                .orElseThrow(BusinessLogicException::creditCardNotFound);
+
+        log.info("Searching for account has id {} ", accountId);
+        Account requestedAccount = accountService.findAccountById(accountId)
+                .orElseThrow(BusinessLogicException::accountNotFound);
+
+        InvoiceRequest invoiceRequest = new InvoiceRequest();
+        invoiceRequest.setInvoiceDate(LocalDate.now());
+        invoiceRequest.setQuantity(1);
+        invoiceRequest.setPay(true);
+        invoiceRequest.setTotalPayment(invoiceDetailRepository.findByEbookId(ebookId).get().getEbookPrice());
+        invoiceRequest.setCreditCardId(creditCardId);
+        invoiceRequest.setAccountId(accountId);
+
+        return create(invoiceRequest);
     }
 }

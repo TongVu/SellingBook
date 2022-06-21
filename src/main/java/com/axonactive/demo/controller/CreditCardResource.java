@@ -3,7 +3,6 @@ package com.axonactive.demo.controller;
 import com.axonactive.demo.controller.request.CreditCardRequest;
 import com.axonactive.demo.entity.CreditCard;
 import com.axonactive.demo.exception.BusinessLogicException;
-import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.CreditCardService;
 import com.axonactive.demo.service.dto.creditCardDto.CreditCardDto;
 import com.axonactive.demo.service.mapper.CreditCardMapper;
@@ -26,9 +25,6 @@ public class CreditCardResource {
 
     @Autowired
     CreditCardMapper creditCardMapper;
-
-    @Autowired
-    AccountService accountService;
 
     @GetMapping
     public ResponseEntity<List<CreditCardDto>> getAll() {

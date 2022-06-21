@@ -86,4 +86,9 @@ public class InvoiceDetailServiceImpl implements InvoiceDetailService {
     public Optional<InvoiceDetail> findInvoiceDetailById(Integer id) {
         return invoiceDetailRepository.findById(id);
     }
+
+    @Override
+    public Optional<InvoiceDetail> findByEbookId(Integer ebookId) {
+        return invoiceDetailRepository.findByEbookId(ebookId);
+    }
 }

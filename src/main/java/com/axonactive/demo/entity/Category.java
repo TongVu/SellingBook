@@ -3,6 +3,7 @@ package com.axonactive.demo.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -21,5 +22,6 @@ public class Category {
     @Column(unique = true)
     private String name;
 
+    @Min(0)
     private Integer numberOfBooks;
 }

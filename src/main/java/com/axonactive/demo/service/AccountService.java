@@ -1,9 +1,11 @@
 package com.axonactive.demo.service;
 
 import com.axonactive.demo.controller.request.AccountRequest;
+import com.axonactive.demo.controller.request.InvoiceRequest;
 import com.axonactive.demo.entity.Account;
-import com.axonactive.demo.service.dto.accountDto.AccountInvocesDto;
+import com.axonactive.demo.service.dto.accountDto.AccountInvoicesDto;
 import com.axonactive.demo.service.dto.ebookDto.EbookPurchasedDto;
+import com.axonactive.demo.service.dto.invoiceDto.InvoiceDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,5 +32,6 @@ public interface AccountService {
 
     List<EbookPurchasedDto> findNotPurchasedEbooks(Integer id);
 
-    List<AccountInvocesDto> findAllInvoices(Integer id);
+    List<AccountInvoicesDto> findAllInvoices(Integer id);
+
 }

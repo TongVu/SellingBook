@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountInvocesDto {
+public class AccountInvoicesDto {
 
     private LocalDate invoiceDate;
 
@@ -22,5 +22,4 @@ public class AccountInvocesDto {
     private LocalDate dateAdded;
 
     private Double ebookPrice;
-
 }

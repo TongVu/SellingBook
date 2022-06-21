@@ -104,4 +104,10 @@ public class BusinessLogicException {
         return notFound(PUBLISHER_NOT_FOUND_KEY, PUBLISHER_NOT_FOUND_MSG);
     }
 
+    private static final String ACCOUNT_AND_CREDIT_CARD_NOT_MATCH_KEY = "AccountAndCreditCardNotMatch";
+    private static final String ACCOUNT_AND_CREDIT_CARD_NOT_MATCH_MSG = "Account And Credit Card Not Match";
+
+    public static ResponseException accountAndCreditCardNotMatch() {
+        return notFound(ACCOUNT_AND_CREDIT_CARD_NOT_MATCH_KEY, ACCOUNT_AND_CREDIT_CARD_NOT_MATCH_MSG);
+    }
 }

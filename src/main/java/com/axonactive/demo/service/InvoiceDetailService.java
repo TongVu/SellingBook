@@ -18,4 +18,6 @@ public interface InvoiceDetailService {
     void deleteById(Integer id);
 
     Optional<InvoiceDetail> findInvoiceDetailById(Integer id);
+
+    Optional<InvoiceDetail> findByEbookId(Integer ebookId);
 }

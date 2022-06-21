@@ -1,7 +1,7 @@
 package com.axonactive.demo.repository;
 
 import com.axonactive.demo.entity.Account;
-import com.axonactive.demo.service.dto.accountDto.AccountInvocesDto;
+import com.axonactive.demo.service.dto.accountDto.AccountInvoicesDto;
 import com.axonactive.demo.service.dto.ebookDto.EbookPurchasedDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,11 +34,11 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
                     "i.isPay = FALSE AND a.id = ?1")
     List<EbookPurchasedDto> findNotPurchasedEbooks(Integer id);
 
-    @Query("SELECT new com.axonactive.demo.service.dto.accountDto.AccountInvocesDto(i.invoiceDate, i.quantity, i.isPay, i.totalPayment, in_de.dateAdded, in_de.ebookPrice) " +
+    @Query("SELECT new com.axonactive.demo.service.dto.accountDto.AccountInvoicesDto(i.invoiceDate, i.quantity, i.isPay, i.totalPayment, in_de.dateAdded, in_de.ebookPrice) " +
             "FROM Account a, Invoice i, InvoiceDetail in_de " +
             "WHERE a.id = i.account.id AND " +
             "i.id = in_de.invoice.id AND " +
             "a.id = ?1 " +
             "ORDER BY in_de.dateAdded ")
-    List<AccountInvocesDto> findAllInvoices(Integer id);
+    List<AccountInvoicesDto> findAllInvoices(Integer id);
 }

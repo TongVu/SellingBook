@@ -4,8 +4,6 @@ import com.axonactive.demo.controller.request.CategoryEbookRelationRequest;
 import com.axonactive.demo.entity.CategoryEbookRelation;
 import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.CategoryEbookRelationService;
-import com.axonactive.demo.service.CategoryService;
-import com.axonactive.demo.service.EbookService;
 import com.axonactive.demo.service.dto.categoryEbookRelationDto.CategoryEbookRelationDto;
 import com.axonactive.demo.service.mapper.CategoryEbookRelationMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +25,6 @@ public class CategoryEbookRelationResource {
 
     @Autowired
     CategoryEbookRelationMapper categoryEbookRelationMapper;
-
-    @Autowired
-    EbookService ebookService;
-
-    @Autowired
-    CategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<List<CategoryEbookRelationDto>> getAll() {

@@ -59,6 +59,14 @@ public class InvoiceResource {
                 .body(invoiceMapper.toDto(createdInvoice));
     }
 
+    @PostMapping("/buy")
+    public ResponseEntity<InvoiceDto> buyEbook(@RequestParam("accountId") Integer accountId,
+                                               @RequestParam("ebookId") Integer ebookId,
+                                               @RequestParam("creditCardId") Integer creditCardId) {
+
+        return ResponseEntity.ok(invoiceMapper.toDto(invoiceService.buyEbook(accountId, ebookId, creditCardId)));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
         log.info("Searching for invoice has id {} ", id);

@@ -3,6 +3,7 @@ package com.axonactive.demo.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -28,6 +29,7 @@ public class Invoice {
     private boolean isPay;
 
     @NotNull
+    @Min(0)
     private double totalPayment;
 
     @ManyToOne

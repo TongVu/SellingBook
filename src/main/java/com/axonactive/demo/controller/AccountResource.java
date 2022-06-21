@@ -5,8 +5,9 @@ import com.axonactive.demo.entity.Account;
 import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.service.AccountService;
 import com.axonactive.demo.service.dto.accountDto.AccountDto;
-import com.axonactive.demo.service.dto.accountDto.AccountInvocesDto;
+import com.axonactive.demo.service.dto.accountDto.AccountInvoicesDto;
 import com.axonactive.demo.service.dto.ebookDto.EbookPurchasedDto;
+import com.axonactive.demo.service.dto.invoiceDto.InvoiceDto;
 import com.axonactive.demo.service.mapper.AccountMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ public class AccountResource {
     }
 
     @GetMapping("/{id}/invoices")
-    public ResponseEntity<List<AccountInvocesDto>> getAllInvoices(@PathVariable("id") Integer id) {
+    public ResponseEntity<List<AccountInvoicesDto>> getAllInvoices(@PathVariable("id") Integer id) {
         log.info("Searching for account has id {} ", id);
         Account account = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
 
@@ -86,6 +87,7 @@ public class AccountResource {
                 .created(URI.create(PATH + "/" + createdAccount.getId()))
                 .body(accountMapper.toDto(createdAccount));
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable("id") Integer id,
