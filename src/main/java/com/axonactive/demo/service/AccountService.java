@@ -18,7 +18,7 @@ public interface AccountService {
 
     Account save(AccountRequest accountRequest);
 
-    void update(Account account, AccountRequest accountRequest);
+    Account update(Account account, AccountRequest accountRequest);
 
     void deleteById(Integer id);
 

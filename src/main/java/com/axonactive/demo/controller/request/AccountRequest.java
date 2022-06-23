@@ -5,20 +5,25 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountRequest {
+    @NotBlank
     private String firstName;
 
+    @NotBlank
     private String lastName;
 
     private LocalDate dob;
 
     private Gender gender;
 
+    @Email(message = "invalid email")
     private String email;
 
     private String phone;

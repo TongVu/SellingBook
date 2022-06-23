@@ -3,6 +3,7 @@ package com.axonactive.demo.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -33,6 +34,7 @@ public class Author {
     private String lastName;
 
     @NotNull
+    @Email
     @Column(unique = true)
     private String email;
 

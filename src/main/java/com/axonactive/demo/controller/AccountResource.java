@@ -12,8 +12,13 @@ import com.axonactive.demo.service.mapper.AccountMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import java.net.URI;
 import java.util.List;
 
@@ -75,12 +80,11 @@ public class AccountResource {
 
         if (!email.equalsIgnoreCase("empty"))
             return ResponseEntity.ok(accountMapper.toDto(accountService.findAccountByEmailContaining(email).get()));
-
         return ResponseEntity.ok("Please provide Request param");
     }
 
     @PostMapping
-    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<AccountDto> createAccount(@Valid @RequestBody AccountRequest accountRequest) {
         Account createdAccount = accountService.save(accountRequest);
 
         return ResponseEntity
@@ -91,13 +95,11 @@ public class AccountResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable("id") Integer id,
-                                                    @RequestBody AccountRequest account) {
+                                                    @RequestBody @Valid AccountRequest account) {
         log.info("Searching for account has id {} ", id);
         Account updatedAccount = accountService.findAccountById(id).orElseThrow(BusinessLogicException::accountNotFound);
 
-        accountService.update(updatedAccount, account);
-        return ResponseEntity.ok(accountMapper.toDto(
-                accountService.save(updatedAccount)));
+        return ResponseEntity.ok(accountMapper.toDto(accountService.update(updatedAccount, account)));
     }
 
     @DeleteMapping("/{id}")

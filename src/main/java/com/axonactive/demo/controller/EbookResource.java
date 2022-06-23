@@ -11,8 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.net.URI;
 import java.util.List;
 
@@ -49,7 +52,7 @@ public class EbookResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<EbookDto> update(@PathVariable("id") Integer id,
-                                           @RequestBody EbookRequest ebookRequest) {
+                                           @RequestBody @Valid EbookRequest ebookRequest) {
         log.info("Searching for ebook has id {} ", id);
         Ebook updatedEbook = ebookService.findEbookById(id)
                 .orElseThrow(BusinessLogicException::ebookAuthorRelationNotFound);
@@ -58,7 +61,7 @@ public class EbookResource {
     }
 
     @PostMapping
-    public ResponseEntity<EbookDto> create(@RequestBody EbookRequest ebook) {
+    public ResponseEntity<EbookDto> create(@RequestBody @Valid EbookRequest ebook) {
         Ebook createdEbook = ebookService.create(ebook);
 
         return ResponseEntity

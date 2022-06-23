@@ -9,13 +9,18 @@ import com.axonactive.demo.service.mapper.AuthorMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import java.net.URI;
 import java.util.List;
 
 @Slf4j
 @RestController
+@Validated
 @RequestMapping(AuthorResource.PATH)
 public class AuthorResource {
     public static final String PATH = "/api/authors";
@@ -42,18 +47,16 @@ public class AuthorResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<AuthorDto> updateAuthor(@PathVariable("id") Integer id,
-                                                  @RequestBody AuthorRequest author) {
+                                                  @RequestBody @Valid AuthorRequest author) {
         log.info("Searching for author has id {} ", id);
         Author updatedAuthor = authorService.findAuthorById(id)
                 .orElseThrow(BusinessLogicException::authorNotFound);
 
-        authorService.update(updatedAuthor, author);
-
-        return ResponseEntity.ok(authorMapper.toDto(authorService.save(updatedAuthor)));
+        return ResponseEntity.ok(authorMapper.toDto(authorService.update(updatedAuthor, author)));
     }
 
     @PostMapping
-    public ResponseEntity<AuthorDto> createAuthor(@RequestBody AuthorRequest author) {
+    public ResponseEntity<AuthorDto> createAuthor(@RequestBody @Valid AuthorRequest author) {
         Author createdAuthor = authorService.create(author);
 
         return ResponseEntity

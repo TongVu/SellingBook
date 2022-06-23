@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class InvoiceResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDto> update(@PathVariable("id") Integer id,
-                                             @RequestBody InvoiceRequest invoiceRequest) {
+                                             @RequestBody @Valid InvoiceRequest invoiceRequest) {
         log.info("Searching for invoice has id {} ", id);
         Invoice updatedInvoice = invoiceService.findInvoiceById(id)
                 .orElseThrow(BusinessLogicException::invoiceNotFound);
@@ -51,7 +52,7 @@ public class InvoiceResource {
     }
 
     @PostMapping
-    public ResponseEntity<InvoiceDto> create(@RequestBody InvoiceRequest invoice) {
+    public ResponseEntity<InvoiceDto> create(@RequestBody @Valid InvoiceRequest invoice) {
         Invoice createdInvoice = invoiceService.create(invoice);
 
         return ResponseEntity

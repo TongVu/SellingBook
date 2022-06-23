@@ -3,6 +3,7 @@ package com.axonactive.demo.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -29,6 +30,7 @@ public class Publisher {
     private String address;
 
     @NotNull
+    @Email
     @Column(unique = true)
     private String email;
 }

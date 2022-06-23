@@ -2,7 +2,9 @@ package com.axonactive.demo.service;
 
 import com.axonactive.demo.controller.request.AuthorRequest;
 import com.axonactive.demo.entity.Author;
+import com.axonactive.demo.exception.BusinessLogicException;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +13,8 @@ public interface AuthorService {
 
     Author save(Author author);
 
-    void update(Author updatedAuthor, AuthorRequest authorRequest);
+
+    Author update(Author updatedAuthor, AuthorRequest authorRequest) ;
 
     void deleteById(Integer id);
 

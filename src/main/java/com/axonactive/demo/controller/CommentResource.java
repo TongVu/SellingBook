@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class CommentResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<CommentDto> update(@PathVariable("id") Integer id,
-                                             @RequestBody CommentRequest commentRequest) {
+                                             @RequestBody @Valid CommentRequest commentRequest) {
         log.info("Searching for comment has id {} ", id);
         Comment updatedComment = commentService.findCommentById(id)
                 .orElseThrow(BusinessLogicException::commenNotFound);
@@ -51,7 +52,7 @@ public class CommentResource {
     }
 
     @PostMapping
-    public ResponseEntity<CommentDto> create(@RequestBody CommentRequest commentRequest) {
+    public ResponseEntity<CommentDto> create(@RequestBody @Valid CommentRequest commentRequest) {
         Comment createdComment = commentService.create(commentRequest);
 
         return ResponseEntity.created(URI.create(

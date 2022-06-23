@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import java.net.URI;
 import java.util.List;
 
@@ -42,8 +43,8 @@ public class EbookAuthorRelationResource {
 
     @GetMapping("/find")
     public ResponseEntity<List<EbookAuthorRelationDto>> getAuthorsByLastNameContaining(
-            @RequestParam(value = "authorname", defaultValue = "empty", required = false) String authorName,
-            @RequestParam(value = "publishername", defaultValue = "empty", required = false) String publisherName) {
+            @RequestParam(value = "authorname", defaultValue = "empty", required = false) @NotBlank String authorName,
+            @RequestParam(value = "publishername", defaultValue = "empty", required = false) @NotBlank String publisherName) {
         if (!publisherName.equals("empty")) {
             List<EbookAuthorRelationDto> results = ebookAuthorRelationService.findEbooksByPublisher(publisherName);
 

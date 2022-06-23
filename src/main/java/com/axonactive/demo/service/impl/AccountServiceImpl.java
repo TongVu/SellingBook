@@ -59,7 +59,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void update(Account updatedAccount, AccountRequest account) {
+    public Account update(Account updatedAccount, AccountRequest account) {
         updatedAccount.setFirstName(account.getFirstName());
         updatedAccount.setLastName(account.getLastName());
         updatedAccount.setDob(account.getDob());
@@ -67,6 +67,8 @@ public class AccountServiceImpl implements AccountService {
         updatedAccount.setEmail(account.getEmail());
         updatedAccount.setPhone(account.getPhone());
         updatedAccount.setAddress(account.getAddress());
+
+        return accountRepository.save(updatedAccount);
     }
 
     @Override

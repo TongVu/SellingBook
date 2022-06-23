@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class PublisherResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<PublisherDto> update(@PathVariable("id") Integer id,
-                                               @RequestBody PublisherRequest publisherRequest) {
+                                               @RequestBody @Valid PublisherRequest publisherRequest) {
         log.info("Searching for publisher has id {} ", id);
         Publisher updatedPublisher = publisherService.findPublisherById(id)
                 .orElseThrow(BusinessLogicException::publisherNotFound);
@@ -52,7 +53,7 @@ public class PublisherResource {
     }
 
     @PostMapping
-    public ResponseEntity<PublisherDto> create(@RequestBody PublisherRequest publisherRequest) {
+    public ResponseEntity<PublisherDto> create(@RequestBody @Valid PublisherRequest publisherRequest) {
         Publisher createdPublisher = publisherService.create(publisherRequest);
 
         return ResponseEntity

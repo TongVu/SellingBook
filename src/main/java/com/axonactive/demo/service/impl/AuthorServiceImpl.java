@@ -2,6 +2,7 @@ package com.axonactive.demo.service.impl;
 
 import com.axonactive.demo.controller.request.AuthorRequest;
 import com.axonactive.demo.entity.Author;
+import com.axonactive.demo.exception.BusinessLogicException;
 import com.axonactive.demo.repository.AuthorRepository;
 import com.axonactive.demo.service.AuthorService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +33,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void update(Author updatedAuthor, AuthorRequest authorRequest) {
+    public Author update(Author updatedAuthor, AuthorRequest authorRequest) {
 
         updatedAuthor.setDob(authorRequest.getDob());
         updatedAuthor.setAddress(authorRequest.getAddress());
@@ -42,7 +44,7 @@ public class AuthorServiceImpl implements AuthorService {
         updatedAuthor.setPhone(authorRequest.getPhone());
         updatedAuthor.setNationality(authorRequest.getNationality());
 
-        authorRepository.save(updatedAuthor);
+        return authorRepository.save(updatedAuthor);
     }
 
 

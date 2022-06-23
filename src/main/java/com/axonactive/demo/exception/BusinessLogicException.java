@@ -2,7 +2,7 @@ package com.axonactive.demo.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class BusinessLogicException extends Throwable{
+public class BusinessLogicException {
     public static ResponseException notFound(String messageKey, String message) {
         return new ResponseException(messageKey, message, HttpStatus.NOT_FOUND);
     }
@@ -105,4 +105,12 @@ public class BusinessLogicException extends Throwable{
     public static ResponseException accountAndCreditCardNotMatch() {
         return notFound(ACCOUNT_AND_CREDIT_CARD_NOT_MATCH_KEY, ACCOUNT_AND_CREDIT_CARD_NOT_MATCH_MSG);
     }
+
+    private static final String EMAIL_FORMAT_NOT_MATCH_KEY = "EmailFormatNotMatch";
+    private static final String EMAIL_FORMAT_NOT_MATCH_MSG = "Email Format Not Match";
+
+    public static ResponseException emailFormatNotMatch() {
+        return badRequest(EMAIL_FORMAT_NOT_MATCH_KEY,EMAIL_FORMAT_NOT_MATCH_MSG);
+    }
+
 }

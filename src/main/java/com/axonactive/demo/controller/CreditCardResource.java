@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class CreditCardResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<CreditCardDto> update(@PathVariable("id") Integer id,
-                                                @RequestBody CreditCardRequest creditCardRequest) {
+                                                @RequestBody @Valid CreditCardRequest creditCardRequest) {
         log.info("Searching for credit card has id {} ", id);
         CreditCard updatedCreditCard = creditCardService.findCreditCardById(id)
                 .orElseThrow(BusinessLogicException::creditCardNotFound);
@@ -51,7 +52,7 @@ public class CreditCardResource {
     }
 
     @PostMapping
-    public ResponseEntity<CreditCardDto> create(@RequestBody CreditCardRequest creditCardRequest) {
+    public ResponseEntity<CreditCardDto> create(@RequestBody @Valid CreditCardRequest creditCardRequest) {
         CreditCard createdCreditCard = creditCardService.create(creditCardRequest);
 
         return ResponseEntity

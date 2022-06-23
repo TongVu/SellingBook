@@ -8,15 +8,20 @@ import com.axonactive.demo.service.dto.categoryEbookRelationDto.CategoryEbookRel
 import com.axonactive.demo.service.mapper.CategoryEbookRelationMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.net.URI;
 import java.util.List;
 
 @Slf4j
-@RestController
 @RequestMapping(CategoryEbookRelationResource.PATH)
+@RestController
+@Validated
 public class CategoryEbookRelationResource {
     public static final String PATH = "/api/categoryebookrelations";
 
@@ -41,8 +46,13 @@ public class CategoryEbookRelationResource {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<?> getEbooksHaveRatingGreaterThan(@RequestParam(value = "rating", required = false) Double ratingPoints,
+    public ResponseEntity<?> getEbooksHaveRatingGreaterThan(@RequestParam Double ratingPoints,
                                                             @RequestParam(value = "category", defaultValue = "empty", required = false) String categoryName) {
+        if(ratingPoints < 1)
+            return ResponseEntity.badRequest().body("rating point has to be more than 1");
+        if(ratingPoints > 5)
+            return ResponseEntity.badRequest().body("rating point has to be more than 5");
+
         if (ratingPoints != null &&
                 !categoryName.equals("empty"))
             return ResponseEntity.ok(categoryEbookRelationMapper.toDtos(
