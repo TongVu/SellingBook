@@ -22,6 +22,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping(EbookResource.PATH)
+@Validated
 public class EbookResource {
     public static final String PATH = "api/ebooks";
 
@@ -46,7 +47,7 @@ public class EbookResource {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<List<EbookInfoCategoryAuthorDto>> getEbookByPage(@Param("pages") Integer pages) {
+    public ResponseEntity<List<EbookInfoCategoryAuthorDto>> getEbookByPage(@Param("pages") @Min(value = 1, message = "Pages has to be more than 0") Integer pages) {
         return ResponseEntity.ok(ebookService.findEbookByPagesGreaterThan(pages));
     }
 
